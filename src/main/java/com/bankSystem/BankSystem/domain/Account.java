@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import static javax.persistence.FetchType.*;
@@ -14,13 +15,12 @@ import static javax.persistence.FetchType.*;
 @Getter
 @NoArgsConstructor
 public class Account extends BaseEntity{
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "account_num")
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "account_id")
     private Long id;
 
-    @ColumnDefault("0") // 스키마 생성에만 관여
-    @NotNull
+    @ColumnDefault("0")
+    @Min(0)
     private int balance = 0;
 
     @ColumnDefault("TRUE")

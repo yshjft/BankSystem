@@ -14,8 +14,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class Client extends BaseEntity{
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Id @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name="client_id")
     private Long id;
 
     @Column(length = 30)
