@@ -7,7 +7,9 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.FetchType.*;
 
@@ -23,12 +25,18 @@ public class Account extends BaseEntity{
     @Min(0)
     private int balance = 0;
 
-    @ColumnDefault("TRUE")
     private boolean hasCard = false;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "client_id")
     private Client client;
+
+    @OneToMany(mappedBy = "account")
+    private List<AccountLog> accountLogs= new ArrayList<>();
+
+    // 대상 테이블
+    @OneToOne(fetch = LAZY, mappedBy = "account")
+    private Card card;
 
     @Builder
     public Account(Long id, int balance, boolean hasCard, Client client) {
@@ -37,5 +45,9 @@ public class Account extends BaseEntity{
         this.hasCard = hasCard;
         this.client = client;
         client.getAccounts().add(this);
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
     }
 }

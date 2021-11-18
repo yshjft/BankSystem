@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.*;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -44,6 +46,9 @@ public class Client extends BaseEntity{
 
     @OneToMany(mappedBy = "client")
     private List<Account> accounts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "client")
+    private List<CardLog> cardLogs = new ArrayList<>();
 
     @Builder
     public Client(Long id, String name, LocalDate birthDate, String address, String email, String phoneNumber, String job) {
