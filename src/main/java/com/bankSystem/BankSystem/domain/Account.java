@@ -28,8 +28,8 @@ public class Account extends BaseEntity{
     private boolean hasCard = false;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "client_id")
-    private Client client;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "account")
     private List<AccountLog> accountLogs= new ArrayList<>();
@@ -39,11 +39,11 @@ public class Account extends BaseEntity{
     private Card card;
 
     @Builder
-    public Account(Long id, int balance, boolean hasCard, Client client) {
+    public Account(Long id, int balance, boolean hasCard, User client) {
         this.id = id;
         this.balance = balance;
         this.hasCard = hasCard;
-        this.client = client;
+        this.user = user;
         client.getAccounts().add(this);
     }
 

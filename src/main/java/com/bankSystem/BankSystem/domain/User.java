@@ -10,14 +10,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.FetchType.*;
-
 @Entity
 @Getter
 @NoArgsConstructor
-public class Client extends BaseEntity{
+public class User extends BaseEntity{
     @Id @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column(name="client_id")
+    @Column(name="user_id")
     private Long id;
 
     @Column(length = 30)
@@ -36,6 +34,10 @@ public class Client extends BaseEntity{
     @NotNull
     private String email;
 
+    @Column(length = 20)
+    @NotNull
+    private String password;
+
     // '-'이 없이 숫자만 있어야 한다
     @Column(length = 30)
     @NotNull
@@ -44,14 +46,14 @@ public class Client extends BaseEntity{
     @Column(length = 30)
     private String job;
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "user")
     private List<Account> accounts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "user")
     private List<CardLog> cardLogs = new ArrayList<>();
 
     @Builder
-    public Client(Long id, String name, LocalDate birthDate, String address, String email, String phoneNumber, String job) {
+    public User(Long id, String name, LocalDate birthDate, String address, String email, String phoneNumber, String job) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;

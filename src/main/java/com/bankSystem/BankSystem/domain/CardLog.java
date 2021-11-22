@@ -23,16 +23,16 @@ public class CardLog extends BaseEntity{
     private Card card;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "client_id")
-    private Client client;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Builder
-    public CardLog(Long id, int amount, Card card, Client client) {
+    public CardLog(Long id, int amount, Card card, User user) {
         this.id = id;
         this.amount = amount;
         this.card = card;
         card.getCardLogs().add(this);
-        this.client = client;
-        client.getCardLogs().add(this);
+        this.user = user;
+        user.getCardLogs().add(this);
     }
 }

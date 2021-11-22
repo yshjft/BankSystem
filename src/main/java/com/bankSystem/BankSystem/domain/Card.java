@@ -24,8 +24,8 @@ public class Card extends BaseEntity{
     @NotNull
     private String name;
 
-    @NotNull
-    @Min(0)
+    @NotNull @Min(0)
+    @Column(name = "usage_limit")
     private int limit;
 
     // 주 테이블
