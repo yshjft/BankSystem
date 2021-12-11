@@ -43,9 +43,6 @@ public class User extends BaseEntity{
     @NotNull
     private String phoneNumber;
 
-    @Column(length = 30)
-    private String job;
-
     @OneToMany(mappedBy = "user")
     private List<Account> accounts = new ArrayList<>();
 
@@ -53,13 +50,12 @@ public class User extends BaseEntity{
     private List<CardLog> cardLogs = new ArrayList<>();
 
     @Builder
-    public User(Long id, String name, LocalDate birthDate, String address, String email, String phoneNumber, String job) {
+    public User(Long id, String name, LocalDate birthDate, String address, String email, String phoneNumber) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
         this.address = address;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.job = job;
     }
 }
