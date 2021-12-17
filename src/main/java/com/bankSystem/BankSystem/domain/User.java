@@ -30,7 +30,7 @@ public class User extends BaseEntity{
     private String address;
 
     // 이메일 형식을 지켜야만 한다.
-    @Column(length = 30)
+    @Column(length = 30, unique = true)
     @NotNull
     private String email;
 
@@ -50,12 +50,12 @@ public class User extends BaseEntity{
     private List<CardLog> cardLogs = new ArrayList<>();
 
     @Builder
-    public User(Long id, String name, LocalDate birthDate, String address, String email, String phoneNumber) {
-        this.id = id;
+    public User(String name, LocalDate birthDate, String address, String email, String password, String phoneNumber) {
         this.name = name;
         this.birthDate = birthDate;
         this.address = address;
         this.email = email;
+        this.password = password;
         this.phoneNumber = phoneNumber;
     }
 }
