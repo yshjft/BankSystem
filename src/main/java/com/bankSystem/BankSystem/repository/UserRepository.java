@@ -13,16 +13,13 @@ import javax.persistence.EntityManager;
 public class UserRepository {
     private final EntityManager em;
 
-    public int isExist(String email) {
-        return em.createQuery("select count(user) from User user where user.email = :email", Integer.class)
+    public long isExist(String email) {
+        return em.createQuery("select count(user) from User user where user.email = :email", Long.class)
                 .setParameter("email", email)
                 .getSingleResult();
     }
 
     // 회원 조회: 회원이 존재할 수 도 있고 존재하지 않을 수 도 있다.
-
-
-
 
     // 회원 가입
     public User save(UserSaveRequestDto userSaveRequestDto) {
