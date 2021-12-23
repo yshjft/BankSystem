@@ -19,14 +19,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserApiController {
     private final UserService userService;
 
+    // 회원 정보 조회(일부 정보)
+
+    // 회원 정보 조회(상세:모든 정보 다)
+
+    // 회원 가입
     @PostMapping("/add")
     public UserSaveResponseDto save(@Validated @RequestBody UserSaveRequestDto userSaveRequestDto, BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
             log.info("에러 발생");
             log.info("errors={}", bindingResult.getAllErrors());
+            log.info("슈슉슉 ㅅㅂ={}", userSaveRequestDto.getBirthDate());
             //예외처리 해야함
+            throw new IllegalStateException();
         }
 
         return userService.save(userSaveRequestDto);
     }
+
+    // 회원 정보 수정
+
+    // 탈퇴
 }
