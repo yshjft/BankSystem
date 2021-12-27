@@ -1,7 +1,7 @@
 package com.bankSystem.BankSystem.api;
 
-import com.bankSystem.BankSystem.dto.UserSaveRequestDto;
-import com.bankSystem.BankSystem.dto.UserSaveResponseDto;
+import com.bankSystem.BankSystem.api.dto.UserSaveRequestDto;
+import com.bankSystem.BankSystem.api.dto.UserSaveResponseDto;
 import com.bankSystem.BankSystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user")
 public class UserApiController {
     private final UserService userService;
-
     // 회원 정보 조회(일부 정보)
 
     // 회원 정보 조회(상세:모든 정보 다)
@@ -24,7 +23,7 @@ public class UserApiController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/add")
     public UserSaveResponseDto save(@RequestBody @Validated UserSaveRequestDto userSaveRequestDto) {
-        return userService.save(userSaveRequestDto);
+        return userService.join(userSaveRequestDto);
     }
 
     // 회원 정보 수정
