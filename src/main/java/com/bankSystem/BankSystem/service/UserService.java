@@ -1,8 +1,9 @@
 package com.bankSystem.BankSystem.service;
 
+import com.bankSystem.BankSystem.api.dto.user.UserDto;
 import com.bankSystem.BankSystem.domain.user.User;
-import com.bankSystem.BankSystem.api.dto.UserSaveRequestDto;
-import com.bankSystem.BankSystem.api.dto.UserSaveResponseDto;
+import com.bankSystem.BankSystem.api.dto.user.UserSaveRequestDto;
+import com.bankSystem.BankSystem.api.dto.user.UserSaveResponseDto;
 import com.bankSystem.BankSystem.exception.customException.EmailAlreadyInUseException;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +25,18 @@ public class UserService {
             throw new EmailAlreadyInUseException();
         }
 
-        // password 인코딩이 필요하다
-        // dto 변경 필요 => 길이가 달라서 2개를 만들거나 상속을 해야한다.
-        // Entity도 변경 필요 => 길이 변경 필요
+        String encodedPassword = passwordEncoder.encode(userSaveRequestDto.getPassword());
 
-        User newUser = userRepository.save(userSaveRequestDto);
+        UserDto userDto= UserDto.builder()
+                .name(userSaveRequestDto.getName())
+                .birthDate(userSaveRequestDto.getBirthDate())
+                .address(userSaveRequestDto.getAddress())
+                .email(userSaveRequestDto.getEmail())
+                .password(encodedPassword)
+                .phoneNumber(userSaveRequestDto.getPhoneNumber())
+                .build();
+
+        User newUser = userRepository.save(userDto);
 
         return new UserSaveResponseDto(newUser);
     }

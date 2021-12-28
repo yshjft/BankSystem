@@ -1,8 +1,7 @@
 package com.bankSystem.BankSystem.domain.user;
 
 
-import com.bankSystem.BankSystem.domain.user.User;
-import com.bankSystem.BankSystem.api.dto.UserSaveRequestDto;
+import com.bankSystem.BankSystem.api.dto.user.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -22,12 +21,11 @@ public class UserRepository {
     // 회원 조회: 회원이 존재할 수 도 있고 존재하지 않을 수 도 있다.
 
     // 회원 가입
-    public User save(UserSaveRequestDto userSaveRequestDto) {
-        User newUser = userSaveRequestDto.toEntity();
+    public User save(UserDto userDto) {
+        User newUser = userDto.toEntity();
         em.persist(newUser);
         return newUser;
     }
-
 
     // 정보 수정
 

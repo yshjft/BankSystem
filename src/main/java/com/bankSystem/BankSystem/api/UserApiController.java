@@ -1,7 +1,7 @@
 package com.bankSystem.BankSystem.api;
 
-import com.bankSystem.BankSystem.api.dto.UserSaveRequestDto;
-import com.bankSystem.BankSystem.api.dto.UserSaveResponseDto;
+import com.bankSystem.BankSystem.api.dto.user.UserSaveRequestDto;
+import com.bankSystem.BankSystem.api.dto.user.UserSaveResponseDto;
 import com.bankSystem.BankSystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
