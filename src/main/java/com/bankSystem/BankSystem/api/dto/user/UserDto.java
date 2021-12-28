@@ -2,13 +2,11 @@ package com.bankSystem.BankSystem.api.dto.user;
 
 import com.bankSystem.BankSystem.domain.user.User;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
-// service -> repository
 public class UserDto extends UserCommonDto{
     @NotBlank
     @Length(max=80)

@@ -1,6 +1,7 @@
 package com.bankSystem.BankSystem.exception.handler.advice;
 
 import com.bankSystem.BankSystem.exception.customException.EmailAlreadyInUseException;
+import com.bankSystem.BankSystem.exception.customException.LoginException;
 import com.bankSystem.BankSystem.exception.handler.response.ErrorResponse;
 import com.bankSystem.BankSystem.exception.handler.response.ErrorResponses;
 import lombok.extern.slf4j.Slf4j;
@@ -50,10 +51,28 @@ public class ApiControllerAdvice {
         return new ResponseEntity<ErrorResponses>(errorResponses, HttpStatus.BAD_REQUEST);
     }
 
-
     @ExceptionHandler(EmailAlreadyInUseException.class)
     public ResponseEntity<ErrorResponse> emailAlreadyInUseException(EmailAlreadyInUseException e) {
         ErrorResponse errorResponse = new ErrorResponse(EMAIL_ALREADY_IN_USE, "email already in use");
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(LoginException.class)
+    public ResponseEntity<ErrorResponse> loginException(LoginException e) {
+        ErrorResponse errorResponse = null;
+
+        switch (e.getMessage()) {
+            case "LOGIN_FAIL_EMAIL":
+                errorResponse = new ErrorResponse(e.getMessage(), "wrong email");
+                break;
+            case "LOGIN_FAIL_PASSWORD":
+                errorResponse = new ErrorResponse(e.getMessage(), "wrong password");
+                break;
+            default:
+                errorResponse = new ErrorResponse("LOGIN_FAIL", "something's wrong! check your email or password!");
+                break;
+        }
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
