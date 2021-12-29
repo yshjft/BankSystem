@@ -1,4 +1,4 @@
-package com.bankSystem.BankSystem.api.dto.user;
+package com.bankSystem.BankSystem.api.dto.user.save;
 
 import com.bankSystem.BankSystem.domain.user.User;
 import lombok.Builder;
@@ -7,13 +7,13 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
-public class UserDto extends UserCommonDto{
+public class UserSaveDto extends UserSaveBaseDto {
     @NotBlank
     @Length(max=80)
     private String password;
 
     @Builder
-    public UserDto(String name, LocalDate birthDate, String address, String email, String password, String phoneNumber) {
+    public UserSaveDto(String name, LocalDate birthDate, String address, String email, String password, String phoneNumber) {
         this.name = name;
         this.birthDate = birthDate;
         this.address = address;

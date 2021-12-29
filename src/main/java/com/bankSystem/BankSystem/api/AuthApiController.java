@@ -1,7 +1,7 @@
 package com.bankSystem.BankSystem.api;
 
-import com.bankSystem.BankSystem.api.dto.auth.LoginRequestDto;
-import com.bankSystem.BankSystem.api.dto.auth.LoginResponseDto;
+import com.bankSystem.BankSystem.api.dto.auth.AuthLoginRequestDto;
+import com.bankSystem.BankSystem.api.dto.auth.AuthResponseDto;
 import com.bankSystem.BankSystem.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +18,12 @@ public class AuthApiController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public LoginResponseDto login(@RequestBody @Validated LoginRequestDto loginRequestDto, HttpServletRequest request) {
-        return authService.loginService(loginRequestDto, request);
+    public AuthResponseDto login(@RequestBody @Validated AuthLoginRequestDto authLoginRequestDto, HttpServletRequest request) {
+        return authService.login(authLoginRequestDto, request);
     }
 
+    @PostMapping("/logout")
+    public AuthResponseDto logout(HttpServletRequest request) {
+        return authService.logout(request);
+    }
 }

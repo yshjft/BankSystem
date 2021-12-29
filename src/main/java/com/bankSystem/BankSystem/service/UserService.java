@@ -1,16 +1,21 @@
 package com.bankSystem.BankSystem.service;
 
-import com.bankSystem.BankSystem.api.dto.user.UserDto;
+import com.bankSystem.BankSystem.api.dto.user.get.UserGetResponseDto;
+import com.bankSystem.BankSystem.api.dto.user.save.UserSaveDto;
 import com.bankSystem.BankSystem.domain.user.User;
-import com.bankSystem.BankSystem.api.dto.user.UserSaveRequestDto;
-import com.bankSystem.BankSystem.api.dto.user.UserSaveResponseDto;
+import com.bankSystem.BankSystem.api.dto.user.save.UserSaveRequestDto;
+import com.bankSystem.BankSystem.api.dto.user.save.UserSaveResponseDto;
 import com.bankSystem.BankSystem.exception.customException.EmailAlreadyInUseException;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
+import com.bankSystem.BankSystem.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Service
@@ -27,7 +32,7 @@ public class UserService {
 
         String encodedPassword = passwordEncoder.encode(userSaveRequestDto.getPassword());
 
-        UserDto userDto= UserDto.builder()
+        UserSaveDto userSaveDto = UserSaveDto.builder()
                 .name(userSaveRequestDto.getName())
                 .birthDate(userSaveRequestDto.getBirthDate())
                 .address(userSaveRequestDto.getAddress())
@@ -36,8 +41,24 @@ public class UserService {
                 .phoneNumber(userSaveRequestDto.getPhoneNumber())
                 .build();
 
-        User newUser = userRepository.save(userDto);
+        User newUser = userRepository.save(userSaveDto);
 
         return new UserSaveResponseDto(newUser);
+    }
+
+    public UserGetResponseDto get(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+
+        Long userId = (Long)session.getAttribute(SessionConst.LOGIN_MEMBER);
+        log.info("ID = {}", userId);
+        User user = userRepository.findUserById(userId);
+
+        return UserGetResponseDto.builder()
+                .address(user.getAddress())
+                .birthDate(user.getBirthDate())
+                .email(user.getEmail())
+                .name(user.getName())
+                .phoneNumber(user.getPhoneNumber())
+                .build();
     }
 }

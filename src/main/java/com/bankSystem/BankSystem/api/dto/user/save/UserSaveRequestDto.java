@@ -1,4 +1,4 @@
-package com.bankSystem.BankSystem.api.dto.user;
+package com.bankSystem.BankSystem.api.dto.user.save;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class UserSaveRequestDto extends UserCommonDto{
+public class UserSaveRequestDto extends UserSaveBaseDto {
     @NotBlank
     @Length(min=4, max=20)
     private String password;

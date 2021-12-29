@@ -1,12 +1,11 @@
 package com.bankSystem.BankSystem.domain.user;
 
 
-import com.bankSystem.BankSystem.api.dto.user.UserDto;
+import com.bankSystem.BankSystem.api.dto.user.save.UserSaveDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -19,17 +18,18 @@ public class UserRepository {
                 .getSingleResult();
     }
 
-    // 회원 조회: 회원이 존재할 수 도 있고 존재하지 않을 수 도 있다.: optional
     public User findUserByEmail(String email) {
         return em.createQuery("select user from User user where user.email = :email", User.class)
                 .setParameter("email", email)
                 .getSingleResult();
     }
 
+    public User findUserById(Long id) {
+        return em.find(User.class, id);
+    }
 
-    // 회원 가입
-    public User save(UserDto userDto) {
-        User newUser = userDto.toEntity();
+    public User save(UserSaveDto userSaveDto) {
+        User newUser = userSaveDto.toEntity();
         em.persist(newUser);
         return newUser;
     }

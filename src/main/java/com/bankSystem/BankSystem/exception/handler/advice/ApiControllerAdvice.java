@@ -2,6 +2,8 @@ package com.bankSystem.BankSystem.exception.handler.advice;
 
 import com.bankSystem.BankSystem.exception.customException.EmailAlreadyInUseException;
 import com.bankSystem.BankSystem.exception.customException.LoginException;
+import com.bankSystem.BankSystem.exception.customException.UnauthorizedAccessException;
+import com.bankSystem.BankSystem.exception.handler.errorCode.ErrorCode;
 import com.bankSystem.BankSystem.exception.handler.response.ErrorResponse;
 import com.bankSystem.BankSystem.exception.handler.response.ErrorResponses;
 import lombok.extern.slf4j.Slf4j;
@@ -10,31 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
-@ControllerAdvice("com.bankSystem.BankSystem.api")
+@RestControllerAdvice
 public class ApiControllerAdvice {
-    public static final String BAD_REQUEST = "BAD_REQUEST";
-    public static final String EMAIL_ALREADY_IN_USE = "EMAIL_ALREADY_IN_USE";
-
-
-    // typeMismatch를 어떻게 해결할 것인가(보류)
-    /*
-       methodValidException 한정!
-       {
-           errors: [
-              {
-                code: WRONG_REQUEST
-                message: 에러 내용
-              }
-           ]
-       }
-    */
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponses> methodValidException(MethodArgumentNotValidException e, HttpServletRequest request){
         BindingResult bindingResult = e.getBindingResult();
@@ -42,10 +27,8 @@ public class ApiControllerAdvice {
 
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
             StringBuilder message= new StringBuilder();
-            message.append(fieldError.getField());
-            message.append(", ");
-            message.append(fieldError.getDefaultMessage());
-            errorResponses.addError(new ErrorResponse(BAD_REQUEST, message.toString()));
+            message.append(fieldError.getField()).append(", ").append(fieldError.getDefaultMessage());
+            errorResponses.addError(new ErrorResponse(ErrorCode.BAD_REQUEST, message.toString()));
         }
 
         return new ResponseEntity<ErrorResponses>(errorResponses, HttpStatus.BAD_REQUEST);
@@ -53,7 +36,7 @@ public class ApiControllerAdvice {
 
     @ExceptionHandler(EmailAlreadyInUseException.class)
     public ResponseEntity<ErrorResponse> emailAlreadyInUseException(EmailAlreadyInUseException e) {
-        ErrorResponse errorResponse = new ErrorResponse(EMAIL_ALREADY_IN_USE, "email already in use");
+        ErrorResponse errorResponse = new ErrorResponse(ErrorCode.EMAIL_ALREADY_IN_USE, ErrorCode.EMAIL_ALREADY_IN_USE_MESSAGE);
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
@@ -63,17 +46,25 @@ public class ApiControllerAdvice {
         ErrorResponse errorResponse = null;
 
         switch (e.getMessage()) {
-            case "LOGIN_FAIL_EMAIL":
-                errorResponse = new ErrorResponse(e.getMessage(), "wrong email");
+            case "EMAIL":
+                errorResponse = new ErrorResponse(ErrorCode.LOGIN_FAIL_EMAIL, ErrorCode.LOGIN_FAIL_EMAIL_MESSAGE);
                 break;
-            case "LOGIN_FAIL_PASSWORD":
-                errorResponse = new ErrorResponse(e.getMessage(), "wrong password");
+            case "PASSWORD":
+                errorResponse = new ErrorResponse(ErrorCode.LOGIN_FAIL_PASSWORD, ErrorCode.LOGIN_FAIL_PASSWORD_MESSAGE);
                 break;
             default:
-                errorResponse = new ErrorResponse("LOGIN_FAIL", "something's wrong! check your email or password!");
+                errorResponse = new ErrorResponse(ErrorCode.LOGIN_FAIL, ErrorCode.LOGIN_FAIL_MESSAGE);
                 break;
         }
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ErrorResponse> loginException(UnauthorizedAccessException e) {
+        ErrorResponse errorResponse = new ErrorResponse(ErrorCode.UNAUTHORIZED_ACCESS, ErrorCode.UNAUTHORIZED_ACCESS_MESSAGE);
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    // Exception e 핸들러 작성할 것
 }

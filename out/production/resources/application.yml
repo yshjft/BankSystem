@@ -19,4 +19,4 @@ server:
     include-binding-errors: never
   servlet:
     session:
-      timeout: 1800
+      timeout: 30m

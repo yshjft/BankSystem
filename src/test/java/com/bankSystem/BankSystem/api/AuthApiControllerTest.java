@@ -1,9 +1,9 @@
 package com.bankSystem.BankSystem.api;
 
 import com.bankSystem.BankSystem.BaseIntegrationTest;
-import com.bankSystem.BankSystem.api.dto.auth.LoginRequestDto;
-import com.bankSystem.BankSystem.api.dto.user.UserSaveRequestDto;
-import com.bankSystem.BankSystem.testData.User;
+import com.bankSystem.BankSystem.api.dto.auth.AuthLoginRequestDto;
+import com.bankSystem.BankSystem.api.dto.user.save.UserSaveRequestDto;
+import com.bankSystem.BankSystem.testData.TestUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,12 +27,12 @@ public class AuthApiControllerTest extends BaseIntegrationTest {
     @Before
     public void setUp() throws Exception{
         userSaveRequestDto = UserSaveRequestDto.builder()
-                .name(User.NAME)
-                .birthDate(User.BIRTH_DATE)
-                .address(User.ADDRESS)
-                .email(User.EMAIL)
-                .password(User.PASSWORD)
-                .phoneNumber(User.PHONE_NUMBER)
+                .name(TestUser.NAME)
+                .birthDate(TestUser.BIRTH_DATE)
+                .address(TestUser.ADDRESS)
+                .email(TestUser.EMAIL)
+                .password(TestUser.PASSWORD)
+                .phoneNumber(TestUser.PHONE_NUMBER)
                 .build();
 
         String object = objectMapper.writeValueAsString(userSaveRequestDto);
@@ -46,12 +46,12 @@ public class AuthApiControllerTest extends BaseIntegrationTest {
     @Test
     public void 로그인_성공() throws Exception {
         // given
-        LoginRequestDto loginRequestDto = LoginRequestDto.builder()
-                .email(User.EMAIL)
-                .password(User.PASSWORD)
+        AuthLoginRequestDto authLoginRequestDto = AuthLoginRequestDto.builder()
+                .email(TestUser.EMAIL)
+                .password(TestUser.PASSWORD)
                 .build();
 
-        String content = objectMapper.writeValueAsString(loginRequestDto);
+        String content = objectMapper.writeValueAsString(authLoginRequestDto);
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/auth/login")
@@ -71,12 +71,12 @@ public class AuthApiControllerTest extends BaseIntegrationTest {
     @Test
     public void 로그인_실패_이메일() throws Exception {
         // given
-        LoginRequestDto loginRequestDto = LoginRequestDto.builder()
+        AuthLoginRequestDto authLoginRequestDto = AuthLoginRequestDto.builder()
                 .email("user@test.com")
-                .password(User.PASSWORD)
+                .password(TestUser.PASSWORD)
                 .build();
 
-        String content = objectMapper.writeValueAsString(loginRequestDto);
+        String content = objectMapper.writeValueAsString(authLoginRequestDto);
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/auth/login")
@@ -97,12 +97,12 @@ public class AuthApiControllerTest extends BaseIntegrationTest {
     @Test
     public void 로그인_실패_패스워드() throws Exception {
         // given
-        LoginRequestDto loginRequestDto = LoginRequestDto.builder()
-                .email(User.EMAIL)
+        AuthLoginRequestDto authLoginRequestDto = AuthLoginRequestDto.builder()
+                .email(TestUser.EMAIL)
                 .password("111111")
                 .build();
 
-        String content = objectMapper.writeValueAsString(loginRequestDto);
+        String content = objectMapper.writeValueAsString(authLoginRequestDto);
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/auth/login")
@@ -118,4 +118,6 @@ public class AuthApiControllerTest extends BaseIntegrationTest {
         // code: LOGIN_FAIL_PASSWORD
         // message: "wrong password"
     }
+
+
 }

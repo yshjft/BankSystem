@@ -1,4 +1,4 @@
-package com.bankSystem.BankSystem.api.dto.user;
+package com.bankSystem.BankSystem.api.dto.user.save;
 
 import com.bankSystem.BankSystem.domain.user.User;
 import lombok.Getter;

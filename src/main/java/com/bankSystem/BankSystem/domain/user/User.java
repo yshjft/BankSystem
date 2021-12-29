@@ -32,7 +32,6 @@ public class User extends BaseEntity {
     @NotNull
     private String address;
 
-    // 이메일 형식을 지켜야만 한다.
     @Column(length = 30, unique = true)
     @NotNull
     private String email;
@@ -41,7 +40,6 @@ public class User extends BaseEntity {
     @NotNull
     private String password;
 
-    // '-'이 없이 숫자만 있어야 한다
     @Column(length = 30)
     @NotNull
     private String phoneNumber;

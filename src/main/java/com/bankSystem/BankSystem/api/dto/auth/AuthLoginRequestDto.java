@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor
-public class LoginRequestDto {
+public class AuthLoginRequestDto {
     @NotBlank
     @Length(max=30)
     @Email
@@ -21,7 +21,7 @@ public class LoginRequestDto {
     private String password;
 
     @Builder
-    public LoginRequestDto(String email, String password) {
+    public AuthLoginRequestDto(String email, String password) {
         this.email = email;
         this.password = password;
     }

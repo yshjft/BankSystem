@@ -1,7 +1,7 @@
 package com.bankSystem.BankSystem.service;
 
-import com.bankSystem.BankSystem.api.dto.auth.LoginRequestDto;
-import com.bankSystem.BankSystem.api.dto.auth.LoginResponseDto;
+import com.bankSystem.BankSystem.api.dto.auth.AuthLoginRequestDto;
+import com.bankSystem.BankSystem.api.dto.auth.AuthResponseDto;
 import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.exception.customException.LoginException;
@@ -22,25 +22,29 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public LoginResponseDto loginService(LoginRequestDto loginRequestDto, HttpServletRequest request){
+    public AuthResponseDto login(AuthLoginRequestDto authLoginRequestDto, HttpServletRequest request){
         try {
-            // 이메일 대조
-            User user = userRepository.findUserByEmail(loginRequestDto.getEmail());
-
-            // 패스워드 대조
-            boolean isExact= passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword());
+            User user = userRepository.findUserByEmail(authLoginRequestDto.getEmail());
+            boolean isExact= passwordEncoder.matches(authLoginRequestDto.getPassword(), user.getPassword());
             if(!isExact) {
-                throw new LoginException("LOGIN_FAIL_PASSWORD");
+                throw new LoginException("PASSWORD");
             }
 
-            // 세션 생성 및 리턴
             HttpSession session = request.getSession();
             session.setAttribute(SessionConst.LOGIN_MEMBER, user.getId());
 
-            // 성공
-            return new LoginResponseDto("LOGIN_SUCCESS");
+            return new AuthResponseDto("LOGIN_SUCCESS");
         }catch (EmptyResultDataAccessException e) {
-            throw new LoginException("LOGIN_FAIL_EMAIL");
+            throw new LoginException("EMAIL");
         }
+    }
+
+    public AuthResponseDto logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if(session != null) {
+            session.invalidate();
+        }
+
+        return new AuthResponseDto("LOGOUT_SUCCESS");
     }
 }
