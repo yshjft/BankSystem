@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UserApiController {
     private final UserService userService;
 
-    @GetMapping("/")
+    @GetMapping
     public UserGetResponseDto get(HttpServletRequest request) {
         return userService.get(request);
     }

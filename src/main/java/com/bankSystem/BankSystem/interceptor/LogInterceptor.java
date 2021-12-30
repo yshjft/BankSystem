@@ -1,11 +1,13 @@
 package com.bankSystem.BankSystem.interceptor;
 
+import com.bankSystem.BankSystem.session.SessionKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +25,7 @@ public class LogInterceptor implements HandlerInterceptor {
 
         String uri = request.getRequestURI();
         String method = request.getMethod();
+        HttpSession session = request.getSession(false);
 
         log.info("[ID: {}] REQUEST {} {}", uuid, method, uri);
         return true;

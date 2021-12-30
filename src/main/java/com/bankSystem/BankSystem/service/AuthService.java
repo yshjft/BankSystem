@@ -5,7 +5,7 @@ import com.bankSystem.BankSystem.api.dto.auth.AuthResponseDto;
 import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.exception.customException.LoginException;
-import com.bankSystem.BankSystem.session.SessionConst;
+import com.bankSystem.BankSystem.session.SessionKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -31,7 +31,7 @@ public class AuthService {
             }
 
             HttpSession session = request.getSession();
-            session.setAttribute(SessionConst.LOGIN_MEMBER, user.getId());
+            session.setAttribute(SessionKey.LOGIN_MEMBER, user.getId());
 
             return new AuthResponseDto("LOGIN_SUCCESS");
         }catch (EmptyResultDataAccessException e) {

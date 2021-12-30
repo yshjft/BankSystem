@@ -7,7 +7,7 @@ import com.bankSystem.BankSystem.api.dto.user.save.UserSaveRequestDto;
 import com.bankSystem.BankSystem.api.dto.user.save.UserSaveResponseDto;
 import com.bankSystem.BankSystem.exception.customException.EmailAlreadyInUseException;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
-import com.bankSystem.BankSystem.session.SessionConst;
+import com.bankSystem.BankSystem.session.SessionKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,8 +49,7 @@ public class UserService {
     public UserGetResponseDto get(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
-        Long userId = (Long)session.getAttribute(SessionConst.LOGIN_MEMBER);
-        log.info("ID = {}", userId);
+        Long userId = (Long)session.getAttribute(SessionKey.LOGIN_MEMBER);
         User user = userRepository.findUserById(userId);
 
         return UserGetResponseDto.builder()

@@ -1,7 +1,7 @@
 package com.bankSystem.BankSystem.interceptor;
 
 import com.bankSystem.BankSystem.exception.customException.UnauthorizedAccessException;
-import com.bankSystem.BankSystem.session.SessionConst;
+import com.bankSystem.BankSystem.session.SessionKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -15,7 +15,7 @@ public class AuthCheckInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession(false);
 
-        if(session == null || session.getAttribute(SessionConst.LOGIN_MEMBER) == null) {
+        if(session == null || session.getAttribute(SessionKey.LOGIN_MEMBER) == null) {
             throw new UnauthorizedAccessException();
         }
 
