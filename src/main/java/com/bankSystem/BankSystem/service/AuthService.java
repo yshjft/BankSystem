@@ -45,6 +45,8 @@ public class AuthService {
             session.invalidate();
         }
 
-        return new AuthResponseDto("LOGOUT_SUCCESS");
+        return AuthResponseDto.builder()
+                .code("LOGOUT_SUCCESS")
+                .build();
     }
 }
