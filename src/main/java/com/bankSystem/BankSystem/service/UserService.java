@@ -1,7 +1,6 @@
 package com.bankSystem.BankSystem.service;
 
 import com.bankSystem.BankSystem.api.dto.user.get.UserGetResponseDto;
-import com.bankSystem.BankSystem.api.dto.user.save.UserSaveDto;
 import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.api.dto.user.save.UserSaveRequestDto;
 import com.bankSystem.BankSystem.api.dto.user.save.UserSaveResponseDto;
@@ -31,19 +30,15 @@ public class UserService {
         }
 
         String encodedPassword = passwordEncoder.encode(userSaveRequestDto.getPassword());
+        userSaveRequestDto.setEncodedPassword(encodedPassword);
 
-        UserSaveDto userSaveDto = UserSaveDto.builder()
-                .name(userSaveRequestDto.getName())
-                .birthDate(userSaveRequestDto.getBirthDate())
-                .address(userSaveRequestDto.getAddress())
-                .email(userSaveRequestDto.getEmail())
-                .password(encodedPassword)
-                .phoneNumber(userSaveRequestDto.getPhoneNumber())
+        User newUser = userRepository.save(userSaveRequestDto);
+
+        return UserSaveResponseDto.builder()
+                .id(newUser.getId())
+                .name(newUser.getName())
+                .email(newUser.getEmail())
                 .build();
-
-        User newUser = userRepository.save(userSaveDto);
-
-        return new UserSaveResponseDto(newUser);
     }
 
     public UserGetResponseDto get(HttpServletRequest request) {

@@ -1,7 +1,6 @@
 package com.bankSystem.BankSystem.api;
 
 import com.bankSystem.BankSystem.BaseIntegrationTest;
-import com.bankSystem.BankSystem.api.dto.user.save.UserSaveDto;
 import com.bankSystem.BankSystem.api.dto.user.save.UserSaveRequestDto;
 import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
@@ -26,23 +25,12 @@ public class UserApiControllerTest extends BaseIntegrationTest {
     @Autowired
     private UserRepository userRepository;
     protected UserSaveRequestDto userSaveRequestDto;
-    protected UserSaveDto userSaveDto;
     protected MockHttpSession session;
 
     @BeforeEach
     public void setObjectMapperAny() {
         objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-
         userSaveRequestDto = UserSaveRequestDto.builder()
-                .name(TestUser.NAME)
-                .birthDate(TestUser.BIRTH_DATE)
-                .address(TestUser.ADDRESS)
-                .email(TestUser.EMAIL)
-                .password(TestUser.PASSWORD)
-                .phoneNumber(TestUser.PHONE_NUMBER)
-                .build();
-
-        userSaveDto = UserSaveDto.builder()
                 .name(TestUser.NAME)
                 .birthDate(TestUser.BIRTH_DATE)
                 .address(TestUser.ADDRESS)
@@ -74,12 +62,17 @@ public class UserApiControllerTest extends BaseIntegrationTest {
     @Test
     public void 회원가입_실패_이메일_중복() throws Exception{
         // given
-        userRepository.save(userSaveDto);
-        String object = objectMapper.writeValueAsString(userSaveRequestDto);
+        String object1 = objectMapper.writeValueAsString(userSaveRequestDto);
+        String object2 = objectMapper.writeValueAsString(userSaveRequestDto);
+
+        mockMvc.perform(post("/api/user/add")
+                .content(object1)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)).andDo(print());
 
         // when
         ResultActions resultActions = mockMvc.perform(post("/api/user/add")
-                .content(object)
+                .content(object2)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)).andDo(print());
 
@@ -92,8 +85,13 @@ public class UserApiControllerTest extends BaseIntegrationTest {
     @Test
     public void 개인정보_조회() throws Exception {
         // given
-        userRepository.save(userSaveDto);
-        User user = userRepository.findUserByEmail(userSaveDto.getEmail());
+        String object = objectMapper.writeValueAsString(userSaveRequestDto);
+        mockMvc.perform(post("/api/user/add")
+                .content(object)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)).andDo(print());
+
+        User user = userRepository.findUserByEmail(userSaveRequestDto.getEmail());
 
         session = new MockHttpSession();
         session.setAttribute(SessionKey.LOGIN_MEMBER, user.getId());

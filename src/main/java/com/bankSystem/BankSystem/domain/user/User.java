@@ -3,6 +3,7 @@ package com.bankSystem.BankSystem.domain.user;
 import com.bankSystem.BankSystem.domain.account.Account;
 import com.bankSystem.BankSystem.domain.BaseEntity;
 import com.bankSystem.BankSystem.domain.CardLog.CardLog;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

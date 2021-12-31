@@ -1,6 +1,6 @@
 package com.bankSystem.BankSystem.api.dto.user.save;
 
-import com.bankSystem.BankSystem.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,9 +11,10 @@ public class UserSaveResponseDto {
     private String name;
     private String email;
 
-    public UserSaveResponseDto(User user) {
-        this.id = user.getId();
-        this.name = user.getName();
-        this.email = user.getEmail();
+    @Builder
+    public UserSaveResponseDto(Long id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
     }
 }
