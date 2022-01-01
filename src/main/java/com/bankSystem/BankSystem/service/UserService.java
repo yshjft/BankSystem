@@ -1,6 +1,8 @@
 package com.bankSystem.BankSystem.service;
 
 import com.bankSystem.BankSystem.api.dto.user.get.UserGetResponseDto;
+import com.bankSystem.BankSystem.api.dto.user.update.UserUpdateRequestDto;
+import com.bankSystem.BankSystem.api.dto.user.update.UserUpdateResponseDto;
 import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.api.dto.user.save.UserSaveRequestDto;
 import com.bankSystem.BankSystem.api.dto.user.save.UserSaveResponseDto;
@@ -42,10 +44,7 @@ public class UserService {
     }
 
     public UserGetResponseDto get(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-
-        Long userId = (Long)session.getAttribute(SessionKey.LOGIN_MEMBER);
-        User user = userRepository.findUserById(userId);
+        User user = getUser(request);
 
         return UserGetResponseDto.builder()
                 .address(user.getAddress())
@@ -54,5 +53,25 @@ public class UserService {
                 .name(user.getName())
                 .phoneNumber(user.getPhoneNumber())
                 .build();
+    }
+
+    public UserUpdateResponseDto update(UserUpdateRequestDto userUpdateRequestDto, HttpServletRequest request) {
+        User user = getUser(request);
+        String encodedPassword = passwordEncoder.encode(userUpdateRequestDto.getPassword());
+
+        user.updateUser(userUpdateRequestDto.getName(), userUpdateRequestDto.getBirthDate(), userUpdateRequestDto.getAddress(), userUpdateRequestDto.getPhoneNumber(), encodedPassword);
+
+        return UserUpdateResponseDto.builder()
+                .name(user.getName())
+                .email(user.getEmail())
+                .message("update success")
+                .build();
+    }
+
+    public User getUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Long userId = (Long)session.getAttribute(SessionKey.LOGIN_MEMBER);
+
+        return userRepository.findUserById(userId);
     }
 }

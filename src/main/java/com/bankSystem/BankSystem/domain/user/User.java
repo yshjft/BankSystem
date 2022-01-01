@@ -52,4 +52,12 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user")
     private List<CardLog> cardLogs = new ArrayList<>();
+
+    public void updateUser(String name, LocalDate birthDate, String address, String phoneNumber, String password) {
+        this.name = name;
+        this.birthDate = birthDate;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+    }
 }

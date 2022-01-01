@@ -3,6 +3,8 @@ package com.bankSystem.BankSystem.api;
 import com.bankSystem.BankSystem.api.dto.user.get.UserGetResponseDto;
 import com.bankSystem.BankSystem.api.dto.user.save.UserSaveRequestDto;
 import com.bankSystem.BankSystem.api.dto.user.save.UserSaveResponseDto;
+import com.bankSystem.BankSystem.api.dto.user.update.UserUpdateRequestDto;
+import com.bankSystem.BankSystem.api.dto.user.update.UserUpdateResponseDto;
 import com.bankSystem.BankSystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +32,11 @@ public class UserApiController {
         return userService.join(userSaveRequestDto);
     }
 
-    // 회원 정보 수정
+    @PutMapping("/update")
+    @ResponseStatus(HttpStatus.OK)
+    public UserUpdateResponseDto update(@RequestBody @Validated UserUpdateRequestDto userUpdateRequestDto, HttpServletRequest request) {
+        return userService.update(userUpdateRequestDto, request);
+    }
 
     // 탈퇴
 }

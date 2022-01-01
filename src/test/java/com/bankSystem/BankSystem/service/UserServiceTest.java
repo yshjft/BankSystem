@@ -1,6 +1,7 @@
 package com.bankSystem.BankSystem.service;
 
 import com.bankSystem.BankSystem.api.dto.user.save.UserSaveRequestDto;
+import com.bankSystem.BankSystem.api.dto.user.update.UserUpdateRequestDto;
 import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.session.SessionKey;
@@ -34,6 +35,7 @@ class UserServiceTest {
             .password(TestUser.ENCODED_PASSWORD)
             .phoneNumber(TestUser.PHONE_NUMBER)
             .build();
+    private UserUpdateRequestDto userUpdateRequestDto = UserUpdateRequestDto.builder().build();
     private MockHttpServletRequest request =new MockHttpServletRequest();
     private MockHttpSession session = (MockHttpSession) request.getSession();
 
@@ -78,13 +80,16 @@ class UserServiceTest {
         verify(userRepository).findUserById(TestUser.ID);
     }
 
-    // 정보 수정
+    @Test
     void 정보_수정() {
         // 정보를 저장된 id로 조회
+        when(userRepository.findUserById(TestUser.ID)).thenReturn(user);
+        session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
 
-        // 정보를 수정
+        userService.update(userUpdateRequestDto, request);
 
-        //
+        // then
+        verify(userRepository).findUserById(TestUser.ID);
     }
 
 }
