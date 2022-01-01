@@ -19,6 +19,7 @@ public class AuthApiController {
 
     @PostMapping("/login")
     public AuthResponseDto login(@RequestBody @Validated AuthLoginRequestDto authLoginRequestDto, HttpServletRequest request) {
+
         return authService.login(authLoginRequestDto, request);
     }
 
