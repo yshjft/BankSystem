@@ -1,4 +1,4 @@
-package com.bankSystem.BankSystem.api.dto.error;
+package com.bankSystem.BankSystem.api.error;
 
 import com.bankSystem.BankSystem.api.dto.common.BaseResponseDto;
 import lombok.Builder;
@@ -9,12 +9,12 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class ErrorsResponseDto extends BaseResponseDto {
+public class ErrorsResponse extends BaseResponseDto {
     private String code;
     private List<Error> errors;
 
     @Builder
-    public ErrorsResponseDto(int status, String message, String code) {
+    public ErrorsResponse(int status, String message, String code) {
         super(status, message);
         this.code = code;
         this.errors = new ArrayList<>();

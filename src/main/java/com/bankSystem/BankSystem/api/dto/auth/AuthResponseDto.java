@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class AuthResponseDto {
-    private String code;
+    private String message;
 
     @Builder
-    public AuthResponseDto(String code) {
-        this.code = code;
+    public AuthResponseDto(String message) {
+        this.message = message;
     }
 }

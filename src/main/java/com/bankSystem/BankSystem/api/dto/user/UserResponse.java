@@ -1,30 +1,34 @@
-package com.bankSystem.BankSystem.api.dto.user.join;
+package com.bankSystem.BankSystem.api.dto.user;
 
 import com.bankSystem.BankSystem.api.dto.common.BaseResponseDto;
+import com.bankSystem.BankSystem.api.dto.user.get.UserGetResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UserJoinResponse extends BaseResponseDto {
+public class UserResponse<T> extends BaseResponseDto {
     private UserResult result;
 
+
+    // 추상 클래스
     @Builder
-    public UserJoinResponse(int status, String message, UserJoinResponseDto userJoinResponseDto) {
+    public UserResponse(int status, String message, T userResponseDto) {
         super(status, message);
         this.result = UserResult.builder()
-                .user(userJoinResponseDto)
+                .user(userResponseDto)
                 .build();
     }
 
+    // generics
     @Getter
     @NoArgsConstructor
-    public static class UserResult {
-        private UserJoinResponseDto user;
+    private static class UserResult<T> {
+        private T user;
 
         @Builder
-        public UserResult(UserJoinResponseDto user) {
+        UserResult(T user) {
             this.user = user;
         }
     }

@@ -1,10 +1,12 @@
 package com.bankSystem.BankSystem.api;
 
 import com.bankSystem.BankSystem.api.dto.auth.AuthLoginRequestDto;
+import com.bankSystem.BankSystem.api.dto.auth.AuthResponse;
 import com.bankSystem.BankSystem.api.dto.auth.AuthResponseDto;
 import com.bankSystem.BankSystem.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,13 +20,24 @@ public class AuthApiController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public AuthResponseDto login(@RequestBody @Validated AuthLoginRequestDto authLoginRequestDto, HttpServletRequest request) {
+    @ResponseStatus(HttpStatus.OK)
+    public AuthResponse login(@RequestBody @Validated AuthLoginRequestDto authLoginRequestDto, HttpServletRequest request) {
+        AuthResponseDto authResponseDto = authService.login(authLoginRequestDto, request);
 
-        return authService.login(authLoginRequestDto, request);
+        return AuthResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(authResponseDto.getMessage())
+                .build();
     }
 
     @PostMapping("/logout")
-    public AuthResponseDto logout(HttpServletRequest request) {
-        return authService.logout(request);
+    @ResponseStatus(HttpStatus.OK)
+    public AuthResponse logout(HttpServletRequest request) {
+        AuthResponseDto authResponseDto = authService.logout(request);
+
+        return AuthResponse.builder()
+                .message(authResponseDto.getMessage())
+
+                .build();
     }
 }

@@ -9,18 +9,18 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 public class UserGetResponseDto {
-    private String address;
-    private LocalDate birthDate;
-    private String email;
     private String name;
+    private LocalDate birthDate;
+    private String address;
+    private String email;
     private String phoneNumber;
 
     @Builder
-    public UserGetResponseDto(String address, LocalDate birthDate, String email, String name, String phoneNumber) {
-        this.address = address;
-        this.birthDate = birthDate;
-        this.email = email;
+    public UserGetResponseDto(String name, LocalDate birthDate, String address, String email, String phoneNumber) {
         this.name = name;
+        this.birthDate = birthDate;
+        this.address = address;
+        this.email = email;
         this.phoneNumber = phoneNumber;
     }
 }

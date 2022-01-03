@@ -50,10 +50,10 @@ public class UserService {
         User user = getUser(request);
 
         return UserGetResponseDto.builder()
-                .address(user.getAddress())
-                .birthDate(user.getBirthDate())
-                .email(user.getEmail())
                 .name(user.getName())
+                .birthDate(user.getBirthDate())
+                .address(user.getAddress())
+                .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
                 .build();
     }
@@ -65,9 +65,11 @@ public class UserService {
         user.updateUser(userUpdateRequestDto.getName(), userUpdateRequestDto.getBirthDate(), userUpdateRequestDto.getAddress(), userUpdateRequestDto.getPhoneNumber(), encodedPassword);
 
         return UserUpdateResponseDto.builder()
+                .id(user.getId())
                 .name(user.getName())
-                .email(user.getEmail())
-                .message("update success")
+                .birthDate(user.getBirthDate())
+                .address(user.getAddress())
+                .phoneNumber(user.getPhoneNumber())
                 .build();
     }
 

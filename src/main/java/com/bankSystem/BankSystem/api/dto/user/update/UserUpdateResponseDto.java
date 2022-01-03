@@ -4,18 +4,24 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 
 @Getter
 @NoArgsConstructor
 public class UserUpdateResponseDto {
-    private String message;
+    private Long id;
     private String name;
-    private String email;
+    private LocalDate birthDate;
+    private String address;
+    private String phoneNumber;
 
     @Builder
-    public UserUpdateResponseDto(String message, String name, String email) {
-        this.message = message;
+    public UserUpdateResponseDto(Long id, String name, LocalDate birthDate, String address, String phoneNumber) {
+        this.id = id;
         this.name = name;
-        this.email = email;
+        this.birthDate = birthDate;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
     }
 }

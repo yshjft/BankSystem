@@ -1,4 +1,4 @@
-package com.bankSystem.BankSystem.api.dto.error;
+package com.bankSystem.BankSystem.api.error;
 
 import com.bankSystem.BankSystem.api.dto.common.BaseResponseDto;
 import lombok.Builder;
@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ErrorResponseDto extends BaseResponseDto {
+public class ErrorResponse extends BaseResponseDto {
     private Error error;
 
     @Builder
-    public ErrorResponseDto(int status, String message, String code, String detail) {
+    public ErrorResponse(int status, String message, String code, String detail) {
         super(status, message);
         this.error = Error.builder()
                 .code(code)

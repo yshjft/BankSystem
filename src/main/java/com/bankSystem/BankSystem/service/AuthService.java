@@ -33,7 +33,9 @@ public class AuthService {
             HttpSession session = request.getSession();
             session.setAttribute(SessionKey.LOGIN_MEMBER, user.getId());
 
-            return new AuthResponseDto("LOGIN_SUCCESS");
+            return AuthResponseDto.builder()
+                    .message("login success")
+                    .build();
         }catch (EmptyResultDataAccessException e) {
             throw new LoginException("EMAIL");
         }
@@ -46,7 +48,7 @@ public class AuthService {
         }
 
         return AuthResponseDto.builder()
-                .code("LOGOUT_SUCCESS")
+                .message("logout success")
                 .build();
     }
 }

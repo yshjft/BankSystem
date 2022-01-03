@@ -1,4 +1,4 @@
-package com.bankSystem.BankSystem.api.dto.error;
+package com.bankSystem.BankSystem.api.error;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

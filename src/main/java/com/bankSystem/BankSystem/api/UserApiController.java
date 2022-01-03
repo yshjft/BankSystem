@@ -1,8 +1,8 @@
 package com.bankSystem.BankSystem.api;
 
+import com.bankSystem.BankSystem.api.dto.user.UserResponse;
 import com.bankSystem.BankSystem.api.dto.user.get.UserGetResponseDto;
 import com.bankSystem.BankSystem.api.dto.user.join.UserJoinRequestDto;
-import com.bankSystem.BankSystem.api.dto.user.join.UserJoinResponse;
 import com.bankSystem.BankSystem.api.dto.user.join.UserJoinResponseDto;
 import com.bankSystem.BankSystem.api.dto.user.update.UserUpdateRequestDto;
 import com.bankSystem.BankSystem.api.dto.user.update.UserUpdateResponseDto;
@@ -23,26 +23,39 @@ public class UserApiController {
     private final UserService userService;
 
     @GetMapping
-    public UserGetResponseDto get(HttpServletRequest request) {
-        return userService.get(request);
+    @ResponseStatus(HttpStatus.OK)
+    public UserResponse get(HttpServletRequest request) {
+        UserGetResponseDto userGetResponseDto = userService.get(request);
+
+        return UserResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("get success")
+                .userResponseDto(userGetResponseDto)
+                .build();
     }
 
     @PostMapping("/join")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserJoinResponse join(@RequestBody @Validated UserJoinRequestDto userJoinRequestDto) {
+    public UserResponse join(@RequestBody @Validated UserJoinRequestDto userJoinRequestDto) {
         UserJoinResponseDto userJoinResponseDto = userService.join(userJoinRequestDto);
 
-        return UserJoinResponse.builder()
+        return UserResponse.builder()
                 .status(HttpStatus.CREATED.value())
                 .message("join success")
-                .userJoinResponseDto(userJoinResponseDto)
+                .userResponseDto(userJoinResponseDto)
                 .build();
     }
 
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public UserUpdateResponseDto update(@RequestBody @Validated UserUpdateRequestDto userUpdateRequestDto, HttpServletRequest request) {
-        return userService.update(userUpdateRequestDto, request);
+    public UserResponse update(@RequestBody @Validated UserUpdateRequestDto userUpdateRequestDto, HttpServletRequest request) {
+        UserUpdateResponseDto userUpdateResponseDto = userService.update(userUpdateRequestDto, request);
+
+        return UserResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("update success")
+                .userResponseDto(userUpdateResponseDto)
+                .build();
     }
 
     // 탈퇴
