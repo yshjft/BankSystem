@@ -27,7 +27,7 @@ public class WebConfig  extends WebSecurityConfigurerAdapter implements WebMvcCo
         registry.addInterceptor(new AuthCheckInterceptor())
                 .order(2)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/api/user/add", "/api/auth/login");
+                .excludePathPatterns("/api/user/join", "/api/auth/login", "/error");
     }
 
     @Override

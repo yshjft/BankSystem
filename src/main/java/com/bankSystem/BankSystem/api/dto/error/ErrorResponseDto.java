@@ -1,6 +1,6 @@
 package com.bankSystem.BankSystem.api.dto.error;
 
-import com.bankSystem.BankSystem.api.dto.BaseResponseDto;
+import com.bankSystem.BankSystem.api.dto.common.BaseResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

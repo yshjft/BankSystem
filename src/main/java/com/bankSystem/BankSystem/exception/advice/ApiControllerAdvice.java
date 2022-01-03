@@ -7,6 +7,7 @@ import com.bankSystem.BankSystem.exception.customException.LoginException;
 import com.bankSystem.BankSystem.exception.customException.UnauthorizedAccessException;
 import com.bankSystem.BankSystem.api.dto.error.ErrorCode;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -99,7 +101,6 @@ public class ApiControllerAdvice {
 
     @ExceptionHandler(UnauthorizedAccessException.class)
     public ResponseEntity<ErrorResponseDto> loginException(UnauthorizedAccessException e) {
-        log.error("wtf: {}", e.getMessage());
         ErrorResponseDto errorResponseDto = ErrorResponseDto.builder()
                 .status(ErrorCode.UNAUTHORIZED_ACCESS.getStatus())
                 .message(ErrorCode.UNAUTHORIZED_ACCESS.getMessage())
@@ -110,7 +111,9 @@ public class ApiControllerAdvice {
         return new ResponseEntity<>(errorResponseDto, HttpStatus.UNAUTHORIZED);
     }
 
-    // 필요에 따라서 알아서 추가할 것...
+    // NOT FOUND (WRONG API)
+
+    // USER NOT FOUND
 
     // Exception e 핸들러 작성할 것 -> 서버 내부 문제
 }

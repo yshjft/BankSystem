@@ -1,4 +1,4 @@
-package com.bankSystem.BankSystem.api.dto.user.save;
+package com.bankSystem.BankSystem.api.dto.user.join;
 
 import com.bankSystem.BankSystem.domain.user.User;
 import lombok.*;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class UserSaveRequestDto {
+public class UserJoinRequestDto {
     @NotBlank
     @Length(max=30)
     protected String name;
@@ -43,7 +43,7 @@ public class UserSaveRequestDto {
     private String encodedPassword;
 
     @Builder
-    public UserSaveRequestDto(String name, LocalDate birthDate, String address, String email, String password, String phoneNumber) {
+    public UserJoinRequestDto(String name, LocalDate birthDate, String address, String email, String password, String phoneNumber) {
         this.name = name;
         this.birthDate = birthDate;
         this.address = address;

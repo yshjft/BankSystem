@@ -1,8 +1,9 @@
 package com.bankSystem.BankSystem.api;
 
 import com.bankSystem.BankSystem.api.dto.user.get.UserGetResponseDto;
-import com.bankSystem.BankSystem.api.dto.user.save.UserSaveRequestDto;
-import com.bankSystem.BankSystem.api.dto.user.save.UserSaveResponseDto;
+import com.bankSystem.BankSystem.api.dto.user.join.UserJoinRequestDto;
+import com.bankSystem.BankSystem.api.dto.user.join.UserJoinResponse;
+import com.bankSystem.BankSystem.api.dto.user.join.UserJoinResponseDto;
 import com.bankSystem.BankSystem.api.dto.user.update.UserUpdateRequestDto;
 import com.bankSystem.BankSystem.api.dto.user.update.UserUpdateResponseDto;
 import com.bankSystem.BankSystem.service.UserService;
@@ -26,10 +27,16 @@ public class UserApiController {
         return userService.get(request);
     }
 
-    @PostMapping("/add")
+    @PostMapping("/join")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserSaveResponseDto save(@RequestBody @Validated UserSaveRequestDto userSaveRequestDto) {
-        return userService.join(userSaveRequestDto);
+    public UserJoinResponse join(@RequestBody @Validated UserJoinRequestDto userJoinRequestDto) {
+        UserJoinResponseDto userJoinResponseDto = userService.join(userJoinRequestDto);
+
+        return UserJoinResponse.builder()
+                .status(HttpStatus.CREATED.value())
+                .message("join success")
+                .userJoinResponseDto(userJoinResponseDto)
+                .build();
     }
 
     @PutMapping("/update")

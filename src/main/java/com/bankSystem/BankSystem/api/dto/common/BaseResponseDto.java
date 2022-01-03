@@ -1,4 +1,4 @@
-package com.bankSystem.BankSystem.api.dto;
+package com.bankSystem.BankSystem.api.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -4,8 +4,8 @@ import com.bankSystem.BankSystem.api.dto.user.get.UserGetResponseDto;
 import com.bankSystem.BankSystem.api.dto.user.update.UserUpdateRequestDto;
 import com.bankSystem.BankSystem.api.dto.user.update.UserUpdateResponseDto;
 import com.bankSystem.BankSystem.domain.user.User;
-import com.bankSystem.BankSystem.api.dto.user.save.UserSaveRequestDto;
-import com.bankSystem.BankSystem.api.dto.user.save.UserSaveResponseDto;
+import com.bankSystem.BankSystem.api.dto.user.join.UserJoinRequestDto;
+import com.bankSystem.BankSystem.api.dto.user.join.UserJoinResponseDto;
 import com.bankSystem.BankSystem.exception.customException.EmailAlreadyInUseException;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.session.SessionKey;
@@ -26,20 +26,23 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     
-    public UserSaveResponseDto join(UserSaveRequestDto userSaveRequestDto) {
-        if(userRepository.isExist(userSaveRequestDto.getEmail()) > 0) {
+    public UserJoinResponseDto join(UserJoinRequestDto userJoinRequestDto) {
+        if(userRepository.isExist(userJoinRequestDto.getEmail()) > 0) {
             throw new EmailAlreadyInUseException();
         }
 
-        String encodedPassword = passwordEncoder.encode(userSaveRequestDto.getPassword());
-        userSaveRequestDto.setEncodedPassword(encodedPassword);
+        String encodedPassword = passwordEncoder.encode(userJoinRequestDto.getPassword());
+        userJoinRequestDto.setEncodedPassword(encodedPassword);
 
-        User newUser = userRepository.save(userSaveRequestDto);
+        User newUser = userRepository.save(userJoinRequestDto);
 
-        return UserSaveResponseDto.builder()
+        return UserJoinResponseDto.builder()
                 .id(newUser.getId())
                 .name(newUser.getName())
+                .birthDate(newUser.getBirthDate())
+                .address(newUser.getAddress())
                 .email(newUser.getEmail())
+                .phoneNumber(newUser.getPhoneNumber())
                 .build();
     }
 

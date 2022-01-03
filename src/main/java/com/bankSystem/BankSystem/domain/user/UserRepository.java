@@ -1,6 +1,6 @@
 package com.bankSystem.BankSystem.domain.user;
 
-import com.bankSystem.BankSystem.api.dto.user.save.UserSaveRequestDto;
+import com.bankSystem.BankSystem.api.dto.user.join.UserJoinRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -27,8 +27,8 @@ public class UserRepository {
         return em.find(User.class, id);
     }
 
-    public User save(UserSaveRequestDto userSaveRequestDto) {
-        User newUser = userSaveRequestDto.toEntity();
+    public User save(UserJoinRequestDto userJoinRequestDto) {
+        User newUser = userJoinRequestDto.toEntity();
         em.persist(newUser);
         return newUser;
     }
