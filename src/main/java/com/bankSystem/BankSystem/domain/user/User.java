@@ -1,8 +1,8 @@
 package com.bankSystem.BankSystem.domain.user;
 
 import com.bankSystem.BankSystem.domain.account.Account;
-import com.bankSystem.BankSystem.domain.BaseEntity;
-import com.bankSystem.BankSystem.domain.CardLog.CardLog;
+import com.bankSystem.BankSystem.domain.baseEntity.BaseEntity;
+import com.bankSystem.BankSystem.domain.cardLog.CardLog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

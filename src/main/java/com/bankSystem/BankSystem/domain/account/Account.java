@@ -1,7 +1,7 @@
 package com.bankSystem.BankSystem.domain.account;
 
-import com.bankSystem.BankSystem.domain.BaseEntity;
-import com.bankSystem.BankSystem.domain.Card.Card;
+import com.bankSystem.BankSystem.domain.card.Card;
+import com.bankSystem.BankSystem.domain.baseEntity.DataJpaBaseEntity;
 import com.bankSystem.BankSystem.domain.accountLog.AccountLog;
 import com.bankSystem.BankSystem.domain.user.User;
 import lombok.Builder;
@@ -20,7 +20,7 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Account extends BaseEntity {
+public class Account extends DataJpaBaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "account_id")
     private Long id;

@@ -1,6 +1,8 @@
 package com.bankSystem.BankSystem.web.interceptor;
 
+
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 

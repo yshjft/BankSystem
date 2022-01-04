@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create #update
     properties:
       hibernate:
         format_sql: true
@@ -20,3 +20,6 @@ server:
   servlet:
     session:
       timeout: 30m
+env:
+  session:
+    key: LOGIN_MEMBER

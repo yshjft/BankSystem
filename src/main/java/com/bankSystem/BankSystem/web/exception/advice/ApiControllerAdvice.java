@@ -1,11 +1,11 @@
 package com.bankSystem.BankSystem.web.exception.advice;
 
-import com.bankSystem.BankSystem.web.error.ErrorResponse;
-import com.bankSystem.BankSystem.web.error.ErrorsResponse;
+import com.bankSystem.BankSystem.web.dto.error.ErrorResponse;
+import com.bankSystem.BankSystem.web.dto.error.ErrorsResponse;
 import com.bankSystem.BankSystem.web.exception.customException.EmailAlreadyInUseException;
 import com.bankSystem.BankSystem.web.exception.customException.LoginException;
 import com.bankSystem.BankSystem.web.exception.customException.UnauthorizedAccessException;
-import com.bankSystem.BankSystem.web.error.ErrorCode;
+import com.bankSystem.BankSystem.web.dto.error.ErrorCode;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
