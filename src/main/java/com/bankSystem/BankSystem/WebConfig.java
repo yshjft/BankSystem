@@ -1,7 +1,7 @@
 package com.bankSystem.BankSystem;
 
-import com.bankSystem.BankSystem.interceptor.AuthCheckInterceptor;
-import com.bankSystem.BankSystem.interceptor.LogInterceptor;
+import com.bankSystem.BankSystem.web.interceptor.AuthCheckInterceptor;
+import com.bankSystem.BankSystem.web.interceptor.LogInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

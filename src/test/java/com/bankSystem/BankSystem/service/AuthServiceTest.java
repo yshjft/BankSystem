@@ -1,7 +1,6 @@
 package com.bankSystem.BankSystem.service;
 
-import com.bankSystem.BankSystem.api.dto.auth.AuthLoginRequestDto;
-import com.bankSystem.BankSystem.api.dto.auth.AuthResponseDto;
+import com.bankSystem.BankSystem.web.dto.auth.AuthLoginRequestDto;
 import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.session.SessionKey;

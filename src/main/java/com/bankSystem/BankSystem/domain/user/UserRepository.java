@@ -1,6 +1,6 @@
 package com.bankSystem.BankSystem.domain.user;
 
-import com.bankSystem.BankSystem.api.dto.user.join.UserJoinRequestDto;
+import com.bankSystem.BankSystem.web.dto.user.join.UserJoinRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

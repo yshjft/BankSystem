@@ -1,12 +1,12 @@
 package com.bankSystem.BankSystem.service;
 
-import com.bankSystem.BankSystem.api.dto.user.get.UserGetResponseDto;
-import com.bankSystem.BankSystem.api.dto.user.update.UserUpdateRequestDto;
-import com.bankSystem.BankSystem.api.dto.user.update.UserUpdateResponseDto;
+import com.bankSystem.BankSystem.web.dto.user.get.UserGetResponseDto;
+import com.bankSystem.BankSystem.web.dto.user.update.UserUpdateRequestDto;
+import com.bankSystem.BankSystem.web.dto.user.update.UserUpdateResponseDto;
 import com.bankSystem.BankSystem.domain.user.User;
-import com.bankSystem.BankSystem.api.dto.user.join.UserJoinRequestDto;
-import com.bankSystem.BankSystem.api.dto.user.join.UserJoinResponseDto;
-import com.bankSystem.BankSystem.exception.customException.EmailAlreadyInUseException;
+import com.bankSystem.BankSystem.web.dto.user.join.UserJoinRequestDto;
+import com.bankSystem.BankSystem.web.dto.user.join.UserJoinResponseDto;
+import com.bankSystem.BankSystem.web.exception.customException.EmailAlreadyInUseException;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.session.SessionKey;
 import lombok.RequiredArgsConstructor;

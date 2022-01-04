@@ -1,7 +1,7 @@
 package com.bankSystem.BankSystem.service;
 
-import com.bankSystem.BankSystem.api.dto.user.join.UserJoinRequestDto;
-import com.bankSystem.BankSystem.api.dto.user.update.UserUpdateRequestDto;
+import com.bankSystem.BankSystem.web.dto.user.join.UserJoinRequestDto;
+import com.bankSystem.BankSystem.web.dto.user.update.UserUpdateRequestDto;
 import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.session.SessionKey;
