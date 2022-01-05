@@ -3,8 +3,9 @@ package com.bankSystem.BankSystem.service;
 import com.bankSystem.BankSystem.domain.account.Account;
 import com.bankSystem.BankSystem.domain.account.AccountRepository;
 import com.bankSystem.BankSystem.domain.user.User;
+import com.bankSystem.BankSystem.domain.user.UserJpaRepository;
+import com.bankSystem.BankSystem.SessionKey;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
-import com.bankSystem.BankSystem.session.SessionKey;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateRequestDto;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -35,11 +37,24 @@ public class AccountService {
                 .build();
     }
 
-    // 중복되는 기능이 존재한다. → 리팩토링 해야 하지 않을까?
+    public void getAccounts(int page, int perPage, HttpServletRequest request) {
+        User user = getUser(request);
+
+        // find by userId -> 근데 이거는 유저에서 찾는게 더 빠르지 않음?
+        List<Account> accountList = user.getAccounts();
+        for(Account a : accountList) {
+            log.info("게좌 = {}", a.getId());
+            log.info("잔액, = {}", a.getBalance());
+            log.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        }
+    }
+
+    // 중복, 리팩토링 필요
+    // user가 없는 경우에 대한 예외 처리가 필요할 듯
     public User getUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long userId = (Long)session.getAttribute(SessionKey.LOGIN_MEMBER);
 
-        return userRepository.findUserById(userId);
+        return userRepository.findById(userId).orElse(null);
     }
 }

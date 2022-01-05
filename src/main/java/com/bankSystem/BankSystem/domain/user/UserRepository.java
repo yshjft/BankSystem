@@ -1,40 +1,11 @@
 package com.bankSystem.BankSystem.domain.user;
 
-import com.bankSystem.BankSystem.web.dto.user.join.UserJoinRequestDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.persistence.EntityManager;
+import java.util.Optional;
 
-@Repository
-@RequiredArgsConstructor
-public class UserRepository {
-    private final EntityManager em;
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String email);
 
-    public long isExist(String email) {
-        return em.createQuery("select count(user) from User user where user.email = :email", Long.class)
-                .setParameter("email", email)
-                .getSingleResult();
-    }
-
-    public User findUserByEmail(String email) {
-        return em.createQuery("select user from User user where user.email = :email", User.class)
-                .setParameter("email", email)
-                .getSingleResult();
-    }
-
-    public User findUserById(Long id) {
-        return em.find(User.class, id);
-    }
-
-    public User save(UserJoinRequestDto userJoinRequestDto) {
-        User newUser = userJoinRequestDto.toEntity();
-        em.persist(newUser);
-        return newUser;
-    }
-
-    // 정보 수정
-
-    // 탈퇴
-
+    boolean existsByEmail(String email);
 }

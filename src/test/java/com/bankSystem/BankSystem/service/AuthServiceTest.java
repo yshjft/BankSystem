@@ -1,9 +1,10 @@
 package com.bankSystem.BankSystem.service;
 
+import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.web.dto.auth.AuthLoginRequestDto;
 import com.bankSystem.BankSystem.domain.user.User;
-import com.bankSystem.BankSystem.domain.user.UserRepository;
-import com.bankSystem.BankSystem.session.SessionKey;
+import com.bankSystem.BankSystem.domain.user.UserJpaRepository;
+import com.bankSystem.BankSystem.SessionKey;
 import com.bankSystem.BankSystem.testData.TestUser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,14 +51,14 @@ class AuthServiceTest {
     void 로그인() {
         //when
         session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
-        when(userRepository.findUserByEmail(TestUser.EMAIL)).thenReturn(user);
+        when(userRepository.findByEmail(TestUser.EMAIL)).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(TestUser.PASSWORD, TestUser.ENCODED_PASSWORD)).thenReturn(true);
 
         //given
         authService.login(authLoginRequestDto, request);
 
         //then
-        verify(userRepository).findUserByEmail(TestUser.EMAIL);
+        verify(userRepository).findByEmail(TestUser.EMAIL);
         verify(passwordEncoder).matches(TestUser.PASSWORD, TestUser.ENCODED_PASSWORD);
     }
 

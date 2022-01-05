@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,8 +36,8 @@ public class ApiControllerAdvice {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorsResponse> methodValidException(MethodArgumentNotValidException e){
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<ErrorsResponse> methodValidException(BindException e){
         BindingResult bindingResult = e.getBindingResult();
 
         ErrorsResponse errorsResponse = ErrorsResponse.builder()

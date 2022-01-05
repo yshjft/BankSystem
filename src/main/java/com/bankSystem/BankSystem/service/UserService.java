@@ -1,5 +1,6 @@
 package com.bankSystem.BankSystem.service;
 
+import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.web.dto.user.get.UserGetResponseDto;
 import com.bankSystem.BankSystem.web.dto.user.update.UserUpdateRequestDto;
 import com.bankSystem.BankSystem.web.dto.user.update.UserUpdateResponseDto;
@@ -7,11 +8,10 @@ import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.web.dto.user.join.UserJoinRequestDto;
 import com.bankSystem.BankSystem.web.dto.user.join.UserJoinResponseDto;
 import com.bankSystem.BankSystem.web.exception.customException.EmailAlreadyInUseException;
-import com.bankSystem.BankSystem.domain.user.UserRepository;
-import com.bankSystem.BankSystem.session.SessionKey;
+import com.bankSystem.BankSystem.domain.user.UserJpaRepository;
+import com.bankSystem.BankSystem.SessionKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,14 +28,14 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     
     public UserJoinResponseDto join(UserJoinRequestDto userJoinRequestDto) {
-        if(userRepository.isExist(userJoinRequestDto.getEmail()) > 0) {
+        if(userRepository.existsByEmail(userJoinRequestDto.getEmail())){
             throw new EmailAlreadyInUseException();
         }
 
         String encodedPassword = passwordEncoder.encode(userJoinRequestDto.getPassword());
         userJoinRequestDto.setEncodedPassword(encodedPassword);
 
-        User newUser = userRepository.save(userJoinRequestDto);
+        User newUser = userRepository.save(userJoinRequestDto.toEntity());
 
         return UserJoinResponseDto.builder()
                 .id(newUser.getId())
@@ -74,10 +74,12 @@ public class UserService {
                 .build();
     }
 
+    // 중복, 리팩토링 필요
+    // user가 없는 경우에 대한 예외 처리가 필요할 듯
     public User getUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long userId = (Long)session.getAttribute(SessionKey.LOGIN_MEMBER);
 
-        return userRepository.findUserById(userId);
+        return userRepository.findById(userId).orElse(null);
     }
 }

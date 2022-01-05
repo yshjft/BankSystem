@@ -4,6 +4,7 @@ import com.bankSystem.BankSystem.service.AccountService;
 import com.bankSystem.BankSystem.web.dto.account.AccountResponse;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateRequestDto;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateResponseDto;
+import com.bankSystem.BankSystem.web.dto.PageAttributeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 public class AccountApiController {
     private final AccountService accountService;
 
-    // 생성
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public AccountResponse create(@RequestBody @Validated AccountCreateRequestDto accountCreateRequestDto, HttpServletRequest request) {
@@ -32,8 +32,13 @@ public class AccountApiController {
                 .build();
     }
 
-
     // 전체 조회
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public PageAttributeDto getAccounts(@ModelAttribute @Validated PageAttributeDto pageAttributeDto, HttpServletRequest request) {
+        accountService.getAccounts(pageAttributeDto.getPage(), pageAttributeDto.getPerPage(), request);
+        return pageAttributeDto;
+    }
 
     // 상세 조회
 

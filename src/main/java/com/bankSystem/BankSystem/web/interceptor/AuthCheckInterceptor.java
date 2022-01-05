@@ -1,10 +1,8 @@
 package com.bankSystem.BankSystem.web.interceptor;
 
 import com.bankSystem.BankSystem.web.exception.customException.UnauthorizedAccessException;
-import com.bankSystem.BankSystem.session.SessionKey;
-import lombok.AllArgsConstructor;
+import com.bankSystem.BankSystem.SessionKey;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;

@@ -1,14 +1,14 @@
 package com.bankSystem.BankSystem.service;
 
+import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.web.dto.auth.AuthLoginRequestDto;
 import com.bankSystem.BankSystem.web.dto.auth.AuthResponseDto;
 import com.bankSystem.BankSystem.domain.user.User;
-import com.bankSystem.BankSystem.domain.user.UserRepository;
+import com.bankSystem.BankSystem.domain.user.UserJpaRepository;
 import com.bankSystem.BankSystem.web.exception.customException.LoginException;
-import com.bankSystem.BankSystem.session.SessionKey;
+import com.bankSystem.BankSystem.SessionKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,22 +24,19 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public AuthResponseDto login(AuthLoginRequestDto authLoginRequestDto, HttpServletRequest request){
-        try {
-            User user = userRepository.findUserByEmail(authLoginRequestDto.getEmail());
-            boolean isExact= passwordEncoder.matches(authLoginRequestDto.getPassword(), user.getPassword());
-            if(!isExact) {
-                throw new LoginException("PASSWORD");
-            }
+        User user = userRepository.findByEmail(authLoginRequestDto.getEmail()).orElseThrow(()->new LoginException("EMAIL"));
 
-            HttpSession session = request.getSession();
-            session.setAttribute(SessionKey.LOGIN_MEMBER, user.getId());
-
-            return AuthResponseDto.builder()
-                    .message("login success")
-                    .build();
-        }catch (EmptyResultDataAccessException e) {
-            throw new LoginException("EMAIL");
+        boolean isExact= passwordEncoder.matches(authLoginRequestDto.getPassword(), user.getPassword());
+        if(!isExact) {
+            throw new LoginException("PASSWORD");
         }
+
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionKey.LOGIN_MEMBER, user.getId());
+
+        return AuthResponseDto.builder()
+                .message("login success")
+                .build();
     }
 
     public AuthResponseDto logout(HttpServletRequest request) {

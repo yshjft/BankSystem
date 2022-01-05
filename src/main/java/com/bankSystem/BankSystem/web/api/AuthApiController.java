@@ -36,8 +36,8 @@ public class AuthApiController {
         AuthResponseDto authResponseDto = authService.logout(request);
 
         return AuthResponse.builder()
+                .status(HttpStatus.OK.value())
                 .message(authResponseDto.getMessage())
-
                 .build();
     }
 }
