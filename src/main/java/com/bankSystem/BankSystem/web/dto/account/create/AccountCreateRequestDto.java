@@ -24,7 +24,6 @@ public class AccountCreateRequestDto {
     public Account toEntity(User user) {
         Account account = Account.builder()
                 .balance(this.balance)
-                .hasCard(false)
                 .build();
         account.setAccountOwner(user);
 

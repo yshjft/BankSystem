@@ -39,7 +39,6 @@ class AccountServiceTest {
     private Account account = Account.builder()
             .id(TestAccount.ID)
             .balance(TestAccount.INIT_BALANCE)
-            .hasCard(false)
             .build();
     private MockHttpServletRequest request =new MockHttpServletRequest();
     private MockHttpSession session = (MockHttpSession) request.getSession();

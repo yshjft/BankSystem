@@ -2,8 +2,6 @@ package com.bankSystem.BankSystem.domain.user;
 
 import com.bankSystem.BankSystem.domain.account.Account;
 import com.bankSystem.BankSystem.domain.baseEntity.BaseEntity;
-import com.bankSystem.BankSystem.domain.cardLog.CardLog;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,9 +45,6 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user")
     private List<Account> accounts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<CardLog> cardLogs = new ArrayList<>();
 
     @Builder
     public User(Long id, String name, LocalDate birthDate, String address, String email, String password, String phoneNumber) {
