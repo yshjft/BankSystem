@@ -17,8 +17,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class User extends BaseEntity {
     @Id @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="user_id")
@@ -52,6 +50,17 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user")
     private List<CardLog> cardLogs = new ArrayList<>();
+
+    @Builder
+    public User(Long id, String name, LocalDate birthDate, String address, String email, String password, String phoneNumber) {
+        this.id = id;
+        this.name = name;
+        this.birthDate = birthDate;
+        this.address = address;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+    }
 
     public void updateUser(String name, LocalDate birthDate, String address, String phoneNumber, String password) {
         this.name = name;

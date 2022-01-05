@@ -40,6 +40,9 @@ public class AccountLog extends DataJpaBaseEntity {
         this.info = info;
         this.type = type;
         this.amount = amount;
+    }
+
+    public void setAccount(Account account) {
         this.account = account;
         account.getAccountLogs().add(this);
     }

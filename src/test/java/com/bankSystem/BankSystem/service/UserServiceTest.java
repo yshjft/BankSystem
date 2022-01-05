@@ -6,6 +6,7 @@ import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.session.SessionKey;
 import com.bankSystem.BankSystem.testData.TestUser;
+import com.bankSystem.BankSystem.web.exception.customException.EmailAlreadyInUseException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -62,16 +63,27 @@ class UserServiceTest {
         verify(userRepository).save(userJoinRequestDto);
     }
 
-    // 이거는 어떻게 해야할지 더 찾아봐야 겠다.
+    // 예외 발생 테스트 코드
+    @Test
     void 회원가입_실패_이메일_중복() {
+        try {
+            // given
+            when(userRepository.isExist(TestUser.EMAIL)).thenThrow(new EmailAlreadyInUseException());
 
+            // when
+            userService.join(userJoinRequestDto);
+        }catch (EmailAlreadyInUseException e) {
+            // then
+            verify(userRepository).isExist(TestUser.EMAIL);
+            verify(userRepository, never()).save(userJoinRequestDto);
+        }
     }
 
     @Test
     void 유저_조회() {
         // given
-        when(userRepository.findUserById(TestUser.ID)).thenReturn(user);
         session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
+        when(userRepository.findUserById(TestUser.ID)).thenReturn(user);
 
         // when
         userService.get(request);

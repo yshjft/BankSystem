@@ -1,6 +1,6 @@
 package com.bankSystem.BankSystem.web.dto.user;
 
-import com.bankSystem.BankSystem.web.dto.common.BaseResponseDto;
+import com.bankSystem.BankSystem.web.dto.BaseResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 public class UserResponse<T> extends BaseResponseDto {
     private UserResult result;
 
-
-    // 추상 클래스
     @Builder
     public UserResponse(int status, String message, T userResponseDto) {
         super(status, message);
@@ -20,7 +18,6 @@ public class UserResponse<T> extends BaseResponseDto {
                 .build();
     }
 
-    // generics
     @Getter
     @NoArgsConstructor
     private static class UserResult<T> {

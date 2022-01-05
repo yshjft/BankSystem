@@ -1,6 +1,6 @@
 package com.bankSystem.BankSystem.web.dto.user.get;
 
-import com.bankSystem.BankSystem.web.dto.common.BaseResponseDto;
+import com.bankSystem.BankSystem.web.dto.BaseResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
