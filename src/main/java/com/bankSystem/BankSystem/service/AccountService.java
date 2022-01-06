@@ -3,7 +3,6 @@ package com.bankSystem.BankSystem.service;
 import com.bankSystem.BankSystem.domain.account.Account;
 import com.bankSystem.BankSystem.domain.account.AccountRepository;
 import com.bankSystem.BankSystem.domain.user.User;
-import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.web.dto.MetaData;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateRequestDto;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateResponseDto;
@@ -51,8 +50,7 @@ public class AccountService {
         Page<Account> accounts = accountRepository.findByUser(user, PageRequest.of(page, perPage));
 
         Map<String, Object> result = new HashMap<>();
-        result.put("metadata",
-                MetaData.builder()
+        result.put("metadata", MetaData.builder()
                 .page(page)
                 .page_count(accounts.getTotalPages())
                 .per_page(perPage)

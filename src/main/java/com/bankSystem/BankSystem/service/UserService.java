@@ -75,7 +75,6 @@ public class UserService {
                 .build();
     }
 
-    // 유저가 없는 경우 에러 발생
     public User getUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long userId = (Long)session.getAttribute(SessionKey.LOGIN_MEMBER);

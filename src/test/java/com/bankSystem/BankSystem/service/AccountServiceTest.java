@@ -13,9 +13,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -40,7 +46,6 @@ class AccountServiceTest {
             .balance(TestAccount.INIT_BALANCE)
             .build();
     private MockHttpServletRequest request =new MockHttpServletRequest();
-    private MockHttpSession session = (MockHttpSession) request.getSession();
 
     @InjectMocks
     AccountService accountService;
@@ -51,7 +56,6 @@ class AccountServiceTest {
 
     @Test
     void 계좌_생성() {
-        session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
         account.setAccountOwner(user);
 
         // given
@@ -63,5 +67,26 @@ class AccountServiceTest {
 
         // then
         verify(accountRepository).save(any());
+    }
+
+    @Test
+    void 전체_계좌_조회() {
+        int page = 0;
+        int perPage = 5;
+        Pageable pageable = PageRequest.of(page, perPage);
+        List<Account> accountList = new ArrayList<>();
+        accountList.add(account);
+        Page<Account> accounts = new PageImpl<>(accountList);
+
+        // given
+        when(userService.getUser(request)).thenReturn(user);
+        when(accountRepository.findByUser(user, pageable)).thenReturn(accounts);
+
+        // when
+        accountService.getAccounts(page, perPage, request);
+
+        // then
+        verify(userService).getUser(request);
+        verify(accountRepository).findByUser(user, PageRequest.of(page, perPage));
     }
 }
