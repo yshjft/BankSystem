@@ -4,6 +4,7 @@ import com.bankSystem.BankSystem.web.dto.error.ErrorResponse;
 import com.bankSystem.BankSystem.web.dto.error.ErrorsResponse;
 import com.bankSystem.BankSystem.web.exception.customException.EmailAlreadyInUseException;
 import com.bankSystem.BankSystem.web.exception.customException.LoginException;
+import com.bankSystem.BankSystem.web.exception.customException.NoUserException;
 import com.bankSystem.BankSystem.web.exception.customException.UnauthorizedAccessException;
 import com.bankSystem.BankSystem.web.dto.error.ErrorCode;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
@@ -16,6 +17,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @RestControllerAdvice
@@ -110,9 +114,26 @@ public class ApiControllerAdvice {
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
-    // NOT FOUND (WRONG API)
+    // USER NOT FOUND (NoUserException)
+    @ExceptionHandler(NoUserException.class)
+    public ResponseEntity<ErrorResponse> noUserException(NoUserException e, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if(session != null) {
+            session.invalidate();
+        }
 
-    // USER NOT FOUND
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(ErrorCode.NO_USER.getStatus())
+                .message(ErrorCode.NO_USER.getMessage())
+                .code(ErrorCode.NO_USER.getCode())
+                .detail("non-existent user")
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+
+    // NOT FOUND (WRONG API)
 
     // Exception e 핸들러 작성할 것 -> 서버 내부 문제
 }

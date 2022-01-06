@@ -4,7 +4,6 @@ import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.web.dto.user.join.UserJoinRequestDto;
 import com.bankSystem.BankSystem.web.dto.user.update.UserUpdateRequestDto;
 import com.bankSystem.BankSystem.domain.user.User;
-import com.bankSystem.BankSystem.domain.user.UserJpaRepository;
 import com.bankSystem.BankSystem.SessionKey;
 import com.bankSystem.BankSystem.testData.TestUser;
 import com.bankSystem.BankSystem.web.exception.customException.EmailAlreadyInUseException;

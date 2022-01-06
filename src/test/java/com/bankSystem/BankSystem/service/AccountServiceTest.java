@@ -3,7 +3,6 @@ package com.bankSystem.BankSystem.service;
 import com.bankSystem.BankSystem.domain.account.Account;
 import com.bankSystem.BankSystem.domain.account.AccountRepository;
 import com.bankSystem.BankSystem.domain.user.User;
-import com.bankSystem.BankSystem.domain.user.UserJpaRepository;
 import com.bankSystem.BankSystem.SessionKey;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.testData.TestAccount;
@@ -46,7 +45,7 @@ class AccountServiceTest {
     @InjectMocks
     AccountService accountService;
     @Mock
-    UserRepository userRepository;
+    UserService userService;
     @Mock
     AccountRepository accountRepository;
 
@@ -56,7 +55,7 @@ class AccountServiceTest {
         account.setAccountOwner(user);
 
         // given
-        when(userRepository.findById(TestUser.ID)).thenReturn(Optional.of(user));
+        when(userService.getUser(request)).thenReturn(user);
         when(accountRepository.save(any())).thenReturn(account);
 
         // when
@@ -64,6 +63,5 @@ class AccountServiceTest {
 
         // then
         verify(accountRepository).save(any());
-
     }
 }

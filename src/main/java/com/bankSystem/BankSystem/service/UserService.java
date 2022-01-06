@@ -8,8 +8,8 @@ import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.web.dto.user.join.UserJoinRequestDto;
 import com.bankSystem.BankSystem.web.dto.user.join.UserJoinResponseDto;
 import com.bankSystem.BankSystem.web.exception.customException.EmailAlreadyInUseException;
-import com.bankSystem.BankSystem.domain.user.UserJpaRepository;
 import com.bankSystem.BankSystem.SessionKey;
+import com.bankSystem.BankSystem.web.exception.customException.NoUserException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +24,7 @@ import javax.servlet.http.HttpSession;
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
+    private final HttpSession session;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     
@@ -74,12 +75,13 @@ public class UserService {
                 .build();
     }
 
-    // 중복, 리팩토링 필요
-    // user가 없는 경우에 대한 예외 처리가 필요할 듯
+    // 유저가 없는 경우 에러 발생
     public User getUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long userId = (Long)session.getAttribute(SessionKey.LOGIN_MEMBER);
 
-        return userRepository.findById(userId).orElse(null);
+        User user = userRepository.findById(userId).orElseThrow(()->new NoUserException());
+
+        return user;
     }
 }
