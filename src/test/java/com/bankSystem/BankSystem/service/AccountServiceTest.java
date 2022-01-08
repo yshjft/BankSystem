@@ -89,4 +89,12 @@ class AccountServiceTest {
         verify(userService).getUser(request);
         verify(accountRepository).findByUser(user, PageRequest.of(page, perPage));
     }
+
+    // 입금
+
+    // 출금
+
+    // 송금
+
+    // 상세 조회
 }
