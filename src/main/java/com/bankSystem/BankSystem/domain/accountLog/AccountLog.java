@@ -30,16 +30,20 @@ public class AccountLog extends DataJpaBaseEntity {
     @NotNull
     private int amount;
 
+    @NotNull
+    private int balance;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 
     @Builder
-    public AccountLog(Long id, String info, InputOrOutput type, int amount, Account account) {
+    public AccountLog(Long id, String info, InputOrOutput type, int amount, int balance) {
         this.id = id;
         this.info = info;
         this.type = type;
         this.amount = amount;
+        this.balance = balance;
     }
 
     public void setAccount(Account account) {

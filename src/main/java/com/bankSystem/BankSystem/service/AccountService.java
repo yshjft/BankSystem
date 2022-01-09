@@ -2,10 +2,13 @@ package com.bankSystem.BankSystem.service;
 
 import com.bankSystem.BankSystem.domain.account.Account;
 import com.bankSystem.BankSystem.domain.account.AccountRepository;
+import com.bankSystem.BankSystem.domain.accountLog.AccountLog;
+import com.bankSystem.BankSystem.domain.accountLog.AccountLogRepository;
 import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.web.dto.MetaData;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateRequestDto;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateResponseDto;
+import com.bankSystem.BankSystem.web.dto.account.deposit.DepositRequestDto;
 import com.bankSystem.BankSystem.web.dto.account.getAccounts.AccountGetResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
 public class AccountService {
     private final UserService userService; // 순환 참조 조심할 것
     private final AccountRepository accountRepository;
+    private final AccountLogRepository accountLogRepository;
 
     @Transactional
     public Map<String, Object> create(AccountCreateRequestDto accountCreateRequestDto, HttpServletRequest request) {
@@ -66,5 +70,22 @@ public class AccountService {
         );
 
         return result;
+    }
+
+    // 출금 시에도 dto 같을 듯 네이밍 고려해라
+    public void deposit(DepositRequestDto depositRequestDto) {
+        Account account = accountRepository.findById(depositRequestDto.getAccount_id()).orElseThrow(); // 에러 처리, 존재하지 않는 계좌
+        account.depositMoney(depositRequestDto.getAmount());
+
+        AccountLog accountLog = AccountLog.builder()
+                .info(depositRequestDto.getInfo())
+                .type(depositRequestDto.getType())
+                .amount(depositRequestDto.getAmount())
+                .balance(account.getBalance())
+                .build();
+        accountLog.setAccount(account);
+        accountLogRepository.save(accountLog);
+
+        // 반환 고려
     }
 }

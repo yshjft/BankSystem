@@ -2,12 +2,16 @@ package com.bankSystem.BankSystem.service;
 
 import com.bankSystem.BankSystem.domain.account.Account;
 import com.bankSystem.BankSystem.domain.account.AccountRepository;
+import com.bankSystem.BankSystem.domain.accountLog.AccountLog;
+import com.bankSystem.BankSystem.domain.accountLog.AccountLogRepository;
 import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.SessionKey;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.testData.TestAccount;
+import com.bankSystem.BankSystem.testData.TestAccountLog;
 import com.bankSystem.BankSystem.testData.TestUser;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateRequestDto;
+import com.bankSystem.BankSystem.web.dto.account.deposit.DepositRequestDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,7 +22,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +48,27 @@ class AccountServiceTest {
             .id(TestAccount.ID)
             .balance(TestAccount.INIT_BALANCE)
             .build();
+    private DepositRequestDto depositRequestDto = DepositRequestDto.builder()
+            .account_id(TestAccount.ID)
+            .amount(1000)
+            .type(TestAccountLog.TYPE_IN)
+            .info(TestAccountLog.INFO)
+            .build();
+    private AccountLog accountLogForDeposit = AccountLog.builder()
+            .id(TestAccountLog.ID_IN)
+            .info(TestAccountLog.INFO)
+            .type(TestAccountLog.TYPE_IN)
+            .amount(1000)
+            .balance(2000)
+            .build();
+    private AccountLog accountLogForWithdraw = AccountLog.builder()
+            .id(TestAccountLog.ID_OUT)
+            .info(TestAccountLog.INFO)
+            .type(TestAccountLog.TYPE_OUT)
+            .amount(1000)
+            .balance(0)
+            .build();
+
     private MockHttpServletRequest request =new MockHttpServletRequest();
 
     @InjectMocks
@@ -53,6 +77,8 @@ class AccountServiceTest {
     UserService userService;
     @Mock
     AccountRepository accountRepository;
+    @Mock
+    AccountLogRepository accountLogRepository;
 
     @Test
     void 계좌_생성() {
@@ -91,6 +117,18 @@ class AccountServiceTest {
     }
 
     // 입금
+    void 계좌_입금() {
+        // given(stub)
+        when(accountRepository.findById(TestAccount.ID)).thenReturn(Optional.of(account));
+        when(accountLogRepository.save(accountLogForDeposit)).thenReturn(accountLogForDeposit);
+
+        // when
+        // accountService.deposit(depositRequestDto);
+
+        // then
+        verify(accountRepository).findById(TestAccount.ID);
+        verify(accountLogRepository).save(accountLogForDeposit);
+    }
 
     // 출금
 

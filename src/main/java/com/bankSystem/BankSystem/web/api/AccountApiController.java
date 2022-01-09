@@ -4,6 +4,7 @@ import com.bankSystem.BankSystem.service.AccountService;
 import com.bankSystem.BankSystem.web.dto.account.AccountResponse;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateRequestDto;
 import com.bankSystem.BankSystem.web.dto.PageAttributeDto;
+import com.bankSystem.BankSystem.web.dto.account.deposit.DepositRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Map;
 
 @Slf4j
@@ -48,6 +50,11 @@ public class AccountApiController {
     // 상세 조회
 
     // 입금
+    @PostMapping("/deposit")
+    @ResponseStatus(HttpStatus.OK)
+    public DepositRequestDto deposit(@RequestBody @Validated DepositRequestDto depositRequestDto) {
+        return depositRequestDto;
+    }
 
     // 출금
 

@@ -45,4 +45,12 @@ public class Account extends DataJpaBaseEntity {
         this.user = user;
         user.getAccounts().add(this);
     }
+
+    public void depositMoney(int amount) {
+        this.balance += amount;
+    }
+
+    public void withDrawMoney(int amount) {
+        // 돈을 뺄수 있는지 확인
+    }
 }
