@@ -121,7 +121,7 @@ class AccountServiceTest {
         when(accountLogRepository.save(any())).thenReturn(accountLogForDeposit);
 
         // when
-         accountService.deposit(transactionRequestDto);
+//         accountService.deposit(transactionRequestDto);
 
         // then
         verify(accountRepository).findById(TestAccount.ID);

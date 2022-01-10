@@ -14,7 +14,7 @@ public enum ErrorCode {
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED.value(), "E006", HttpStatus.UNAUTHORIZED.getReasonPhrase()),
     NO_USER(HttpStatus.NOT_FOUND.value(), "E007", HttpStatus.NOT_FOUND.getReasonPhrase()),
     NO_ACCOUNT(HttpStatus.NOT_FOUND.value(), "E008", HttpStatus.NOT_FOUND.getReasonPhrase()),
-    NOT_ENOUGH_MONEY(HttpStatus.BAD_REQUEST.value(), "E009", HttpStatus.BAD_REQUEST.getReasonPhrase()), ;
+    NOT_ENOUGH_MONEY(HttpStatus.BAD_REQUEST.value(), "E009", HttpStatus.BAD_REQUEST.getReasonPhrase());
 
     private final int status;
     private final String code;

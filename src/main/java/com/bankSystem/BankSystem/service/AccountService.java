@@ -1,5 +1,6 @@
 package com.bankSystem.BankSystem.service;
 
+import com.bankSystem.BankSystem.SessionKey;
 import com.bankSystem.BankSystem.domain.InOrOut;
 import com.bankSystem.BankSystem.domain.account.Account;
 import com.bankSystem.BankSystem.domain.account.AccountRepository;
@@ -11,12 +12,15 @@ import com.bankSystem.BankSystem.web.dto.account.checkAccount.CheckAccountReques
 import com.bankSystem.BankSystem.web.dto.account.checkAccount.CheckAccountResponseDto;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateRequestDto;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateResponseDto;
+import com.bankSystem.BankSystem.web.dto.account.getAccount.AccountDetailResponseDto;
+import com.bankSystem.BankSystem.web.dto.account.getAccount.AccountLogResponseDto;
 import com.bankSystem.BankSystem.web.dto.account.sendMoney.SendMoneyRequestDto;
 import com.bankSystem.BankSystem.web.dto.account.sendMoney.SendMoneyResponseDto;
 import com.bankSystem.BankSystem.web.dto.account.transaction.TransactionRequestDto;
 import com.bankSystem.BankSystem.web.dto.account.getAccounts.AccountGetResponseDto;
 import com.bankSystem.BankSystem.web.dto.account.transaction.TransactionResponseDto;
 import com.bankSystem.BankSystem.web.exception.customException.NoAccountException;
+import com.bankSystem.BankSystem.web.exception.customException.NotOwner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,7 +38,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AccountService {
-    private final UserService userService; // 순환 참조 조심할 것
+    private final UserService userService;
     private final AccountRepository accountRepository;
     private final AccountLogRepository accountLogRepository;
 
@@ -57,7 +62,6 @@ public class AccountService {
 
     public Map<String, Object> getAccounts(int page, int perPage, HttpServletRequest request) {
         User user = userService.getUser(request);
-
         Page<Account> accounts = accountRepository.findByUser(user, PageRequest.of(page, perPage));
 
         Map<String, Object> result = new HashMap<>();
@@ -79,9 +83,44 @@ public class AccountService {
         return result;
     }
 
+    public Map<String, Object> getAccount(int page, int perPage, Long accountId, HttpServletRequest request) {
+        Account account = findAccountById(accountId);
+        hasRightToAccess(account, request);
+        Page<AccountLog> accountLogs = accountLogRepository.findByAccount(account, PageRequest.of(page, perPage));
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("account", AccountDetailResponseDto.builder()
+                .account_id(account.getId())
+                .owner(account.getUser().getName())
+                .balance(account.getBalance())
+                .createdAt(account.getCreatedDate())
+                .build()
+        );
+        result.put("metadata", MetaData.builder()
+                .page(page)
+                .page_count(accountLogs.getTotalPages())
+                .per_page(perPage)
+                .total_count(accountLogs.getTotalElements())
+                .build()
+        );
+        result.put("account_logs", accountLogs.getContent().stream()
+                .map(acl -> AccountLogResponseDto.builder()
+                        .type(acl.getType())
+                        .amount(acl.getAmount())
+                        .info(acl.getInfo())
+                        .createdAt(acl.getCreatedDate())
+                        .balance(acl.getBalance())
+                        .build())
+                .collect(Collectors.toList())
+        );
+
+        return result;
+    }
+
     @Transactional
-    public Map<String, Object> deposit(TransactionRequestDto transactionRequestDto) {
+    public Map<String, Object> deposit(TransactionRequestDto transactionRequestDto, HttpServletRequest request) {
         Account account = findAccountById(transactionRequestDto.getAccount_id());
+        hasRightToAccess(account, request);
         account.depositMoney(transactionRequestDto.getAmount());
 
         AccountLog accountLog = AccountLog.builder()
@@ -105,8 +144,9 @@ public class AccountService {
     }
 
     @Transactional
-    public Map<String, Object> withdraw(TransactionRequestDto transactionRequestDto) {
+    public Map<String, Object> withdraw(TransactionRequestDto transactionRequestDto, HttpServletRequest request) {
         Account account = findAccountById(transactionRequestDto.getAccount_id());
+        hasRightToAccess(account, request);
         account.withDrawMoney(transactionRequestDto.getAmount());
 
         AccountLog accountLog = AccountLog.builder()
@@ -129,8 +169,7 @@ public class AccountService {
         return result;
     }
 
-    // 게좌 확인
-    public Map<String, Object> checkAccount(CheckAccountRequestDto checkAccountRequestDto) {
+    public Map<String, Object> checkAccount(CheckAccountRequestDto checkAccountRequestDto, HttpServletRequest request) {
         Account account = findAccountById(checkAccountRequestDto.getAccount_id());
 
         Map<String, Object> result = new HashMap<>();
@@ -142,10 +181,10 @@ public class AccountService {
         return result;
     }
 
-    // 개선 -> 꼭 따로 따로 가져와야 하나?
     @Transactional
-    public Map<String, Object> sendMoney(SendMoneyRequestDto sendMoneyRequestDto) {
+    public Map<String, Object> sendMoney(SendMoneyRequestDto sendMoneyRequestDto, HttpServletRequest request) {
         Account fromAccount = findAccountById(sendMoneyRequestDto.getFrom_id());
+        hasRightToAccess(fromAccount, request);
         Account toAccount = findAccountById(sendMoneyRequestDto.getTo_id());
         fromAccount.withDrawMoney(sendMoneyRequestDto.getAmount());
         toAccount.depositMoney(sendMoneyRequestDto.getAmount());
@@ -161,7 +200,7 @@ public class AccountService {
         fromAccountLog.setAccount(fromAccount);
 
         StringBuilder toAccountInfo = new StringBuilder();
-        fromAccountInfo.append(fromAccount.getUser().getName()).append("(").append(sendMoneyRequestDto.getMemo()).append(")");
+        toAccountInfo.append(fromAccount.getUser().getName()).append("(").append(sendMoneyRequestDto.getMemo()).append(")");
         AccountLog toAccountLog = AccountLog.builder()
                 .info(toAccountInfo.toString())
                 .type(InOrOut.IN)
@@ -188,5 +227,13 @@ public class AccountService {
     public Account findAccountById(Long accountId) {
         Account account = accountRepository.findById(accountId).orElseThrow(()->new NoAccountException());
         return account;
+    }
+
+    public void hasRightToAccess(Account account, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        long userId = (Long)session.getAttribute(SessionKey.LOGIN_MEMBER);
+        long ownerId = account.getUser().getId();
+
+        if(userId != ownerId) throw new NotOwner();
     }
 }

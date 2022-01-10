@@ -24,7 +24,6 @@ import javax.servlet.http.HttpSession;
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
-    private final HttpSession session;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     

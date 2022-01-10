@@ -153,8 +153,19 @@ public class ApiControllerAdvice {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NotOwner.class)
+    public ResponseEntity<ErrorResponse> notOwner(NotOwner e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(ErrorCode.UNAUTHORIZED_ACCESS.getStatus())
+                .message(ErrorCode.UNAUTHORIZED_ACCESS.getMessage())
+                .code(ErrorCode.UNAUTHORIZED_ACCESS.getCode())
+                .detail("not your account")
+                .build();
 
-    // NOT FOUND (WRONG API)
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+
 
     // Exception e 핸들러 작성할 것 -> 서버 내부 문제
 }
