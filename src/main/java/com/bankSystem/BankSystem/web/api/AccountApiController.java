@@ -2,8 +2,10 @@ package com.bankSystem.BankSystem.web.api;
 
 import com.bankSystem.BankSystem.service.AccountService;
 import com.bankSystem.BankSystem.web.dto.account.AccountResponse;
+import com.bankSystem.BankSystem.web.dto.account.checkAccount.CheckAccountRequestDto;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateRequestDto;
 import com.bankSystem.BankSystem.web.dto.PageAttributeDto;
+import com.bankSystem.BankSystem.web.dto.account.sendMoney.SendMoneyRequestDto;
 import com.bankSystem.BankSystem.web.dto.account.transaction.TransactionRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,7 +76,32 @@ public class AccountApiController {
                 .build();
     }
 
+    // 계좌 확인
+    @GetMapping("/checkAccount")
+    @ResponseStatus(HttpStatus.OK)
+    public AccountResponse checkAccount(@RequestBody @Validated CheckAccountRequestDto checkAccountRequestDto) {
+        Map<String, Object> result = accountService.checkAccount(checkAccountRequestDto);
+
+        return AccountResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .result(result)
+                .build();
+    }
+
     // 송금
+    @PostMapping("/sendMoney")
+    @ResponseStatus(HttpStatus.OK)
+    public AccountResponse sendMoney(@RequestBody @Validated SendMoneyRequestDto sendMoneyRequestDto) {
+        Map<String, Object> result = accountService.sendMoney(sendMoneyRequestDto);
+
+        return AccountResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .result(result)
+                .build();
+    }
+
 
     // 삭제
 }

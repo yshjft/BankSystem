@@ -7,13 +7,16 @@ import com.bankSystem.BankSystem.domain.accountLog.AccountLog;
 import com.bankSystem.BankSystem.domain.accountLog.AccountLogRepository;
 import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.web.dto.MetaData;
+import com.bankSystem.BankSystem.web.dto.account.checkAccount.CheckAccountRequestDto;
+import com.bankSystem.BankSystem.web.dto.account.checkAccount.CheckAccountResponseDto;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateRequestDto;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateResponseDto;
+import com.bankSystem.BankSystem.web.dto.account.sendMoney.SendMoneyRequestDto;
+import com.bankSystem.BankSystem.web.dto.account.sendMoney.SendMoneyResponseDto;
 import com.bankSystem.BankSystem.web.dto.account.transaction.TransactionRequestDto;
 import com.bankSystem.BankSystem.web.dto.account.getAccounts.AccountGetResponseDto;
 import com.bankSystem.BankSystem.web.dto.account.transaction.TransactionResponseDto;
 import com.bankSystem.BankSystem.web.exception.customException.NoAccountException;
-import com.bankSystem.BankSystem.web.exception.customException.NotEnoughMoney;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -121,6 +124,62 @@ public class AccountService {
                 .balance(account.getBalance())
                 .amount(transactionRequestDto.getAmount())
                 .type(InOrOut.OUT)
+                .build());
+
+        return result;
+    }
+
+    // 게좌 확인
+    public Map<String, Object> checkAccount(CheckAccountRequestDto checkAccountRequestDto) {
+        Account account = findAccountById(checkAccountRequestDto.getAccount_id());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("account", CheckAccountResponseDto.builder()
+                .account_id(account.getId())
+                .owner(account.getUser().getName())
+                .build());
+
+        return result;
+    }
+
+    // 개선 -> 꼭 따로 따로 가져와야 하나?
+    @Transactional
+    public Map<String, Object> sendMoney(SendMoneyRequestDto sendMoneyRequestDto) {
+        Account fromAccount = findAccountById(sendMoneyRequestDto.getFrom_id());
+        Account toAccount = findAccountById(sendMoneyRequestDto.getTo_id());
+        fromAccount.withDrawMoney(sendMoneyRequestDto.getAmount());
+        toAccount.depositMoney(sendMoneyRequestDto.getAmount());
+
+        StringBuilder fromAccountInfo = new StringBuilder();
+        fromAccountInfo.append(toAccount.getUser().getName()).append("(").append(sendMoneyRequestDto.getMemo()).append(")");
+        AccountLog fromAccountLog = AccountLog.builder()
+                .info(fromAccountInfo.toString())
+                .type(InOrOut.OUT)
+                .amount(sendMoneyRequestDto.getAmount())
+                .balance(fromAccount.getBalance())
+                .build();
+        fromAccountLog.setAccount(fromAccount);
+
+        StringBuilder toAccountInfo = new StringBuilder();
+        fromAccountInfo.append(fromAccount.getUser().getName()).append("(").append(sendMoneyRequestDto.getMemo()).append(")");
+        AccountLog toAccountLog = AccountLog.builder()
+                .info(toAccountInfo.toString())
+                .type(InOrOut.IN)
+                .amount(sendMoneyRequestDto.getAmount())
+                .balance(toAccount.getBalance())
+                .build();
+        toAccountLog.setAccount(toAccount);
+
+        accountLogRepository.save(fromAccountLog);
+        accountLogRepository.save(toAccountLog);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("send_money", SendMoneyResponseDto.builder()
+                .from(sendMoneyRequestDto.getFrom_id())
+                .to(sendMoneyRequestDto.getTo_id())
+                .amount(sendMoneyRequestDto.getAmount())
+                .balance(fromAccount.getBalance())
+                .memo(sendMoneyRequestDto.getMemo())
                 .build());
 
         return result;

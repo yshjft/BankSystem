@@ -154,8 +154,7 @@ public class ApiControllerAdvice {
     }
 
 
-
-        // NOT FOUND (WRONG API)
+    // NOT FOUND (WRONG API)
 
     // Exception e 핸들러 작성할 것 -> 서버 내부 문제
 }
