@@ -141,8 +141,21 @@ public class ApiControllerAdvice {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(NotEnoughMoney.class)
+    public ResponseEntity<ErrorResponse> notEnoughMoney(NotEnoughMoney e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(ErrorCode.NOT_ENOUGH_MONEY.getStatus())
+                .message(ErrorCode.NOT_ENOUGH_MONEY.getMessage())
+                .code(ErrorCode.NOT_ENOUGH_MONEY.getCode())
+                .detail("lack of balance")
+                .build();
 
-    // NOT FOUND (WRONG API)
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+
+
+        // NOT FOUND (WRONG API)
 
     // Exception e 핸들러 작성할 것 -> 서버 내부 문제
 }

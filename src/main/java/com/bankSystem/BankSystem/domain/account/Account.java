@@ -3,6 +3,7 @@ package com.bankSystem.BankSystem.domain.account;
 import com.bankSystem.BankSystem.domain.baseEntity.DataJpaBaseEntity;
 import com.bankSystem.BankSystem.domain.accountLog.AccountLog;
 import com.bankSystem.BankSystem.domain.user.User;
+import com.bankSystem.BankSystem.web.exception.customException.NotEnoughMoney;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,6 +52,9 @@ public class Account extends DataJpaBaseEntity {
     }
 
     public void withDrawMoney(int amount) {
-        // 돈을 뺄수 있는지 확인
+        if(this.balance < amount) {
+            throw new NotEnoughMoney();
+        }
+        this.balance -= amount;
     }
 }

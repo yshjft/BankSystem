@@ -62,6 +62,17 @@ public class AccountApiController {
     }
 
     // 출금
+    @PostMapping("/withdraw")
+    @ResponseStatus(HttpStatus.OK)
+    public AccountResponse withdraw(@RequestBody @Validated TransactionRequestDto transactionRequestDto) {
+        Map<String, Object> result = accountService.withdraw(transactionRequestDto);
+
+        return AccountResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .result(result)
+                .build();
+    }
 
     // 송금
 

@@ -13,6 +13,7 @@ import com.bankSystem.BankSystem.web.dto.account.transaction.TransactionRequestD
 import com.bankSystem.BankSystem.web.dto.account.getAccounts.AccountGetResponseDto;
 import com.bankSystem.BankSystem.web.dto.account.transaction.TransactionResponseDto;
 import com.bankSystem.BankSystem.web.exception.customException.NoAccountException;
+import com.bankSystem.BankSystem.web.exception.customException.NotEnoughMoney;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -95,6 +96,31 @@ public class AccountService {
                 .balance(account.getBalance())
                 .amount(transactionRequestDto.getAmount())
                 .type(InOrOut.IN)
+                .build());
+
+        return result;
+    }
+
+    @Transactional
+    public Map<String, Object> withdraw(TransactionRequestDto transactionRequestDto) {
+        Account account = findAccountById(transactionRequestDto.getAccount_id());
+        account.withDrawMoney(transactionRequestDto.getAmount());
+
+        AccountLog accountLog = AccountLog.builder()
+                .info(transactionRequestDto.getInfo())
+                .type(InOrOut.OUT)
+                .amount(transactionRequestDto.getAmount())
+                .balance(account.getBalance())
+                .build();
+        accountLog.setAccount(account);
+        accountLogRepository.save(accountLog);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("withdraw", TransactionResponseDto.builder()
+                .account_id(account.getId())
+                .balance(account.getBalance())
+                .amount(transactionRequestDto.getAmount())
+                .type(InOrOut.OUT)
                 .build());
 
         return result;
