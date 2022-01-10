@@ -1,5 +1,6 @@
 package com.bankSystem.BankSystem.service;
 
+import com.bankSystem.BankSystem.domain.InOrOut;
 import com.bankSystem.BankSystem.domain.account.Account;
 import com.bankSystem.BankSystem.domain.account.AccountRepository;
 import com.bankSystem.BankSystem.domain.accountLog.AccountLog;
@@ -8,8 +9,10 @@ import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.web.dto.MetaData;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateRequestDto;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateResponseDto;
-import com.bankSystem.BankSystem.web.dto.account.deposit.DepositRequestDto;
+import com.bankSystem.BankSystem.web.dto.account.transaction.TransactionRequestDto;
 import com.bankSystem.BankSystem.web.dto.account.getAccounts.AccountGetResponseDto;
+import com.bankSystem.BankSystem.web.dto.account.transaction.TransactionResponseDto;
+import com.bankSystem.BankSystem.web.exception.customException.NoAccountException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -72,20 +75,33 @@ public class AccountService {
         return result;
     }
 
-    // 출금 시에도 dto 같을 듯 네이밍 고려해라
-    public void deposit(DepositRequestDto depositRequestDto) {
-        Account account = accountRepository.findById(depositRequestDto.getAccount_id()).orElseThrow(); // 에러 처리, 존재하지 않는 계좌
-        account.depositMoney(depositRequestDto.getAmount());
+    @Transactional
+    public Map<String, Object> deposit(TransactionRequestDto transactionRequestDto) {
+        Account account = findAccountById(transactionRequestDto.getAccount_id());
+        account.depositMoney(transactionRequestDto.getAmount());
 
         AccountLog accountLog = AccountLog.builder()
-                .info(depositRequestDto.getInfo())
-                .type(depositRequestDto.getType())
-                .amount(depositRequestDto.getAmount())
+                .info(transactionRequestDto.getInfo())
+                .type(InOrOut.IN)
+                .amount(transactionRequestDto.getAmount())
                 .balance(account.getBalance())
                 .build();
         accountLog.setAccount(account);
         accountLogRepository.save(accountLog);
 
-        // 반환 고려
+        Map<String, Object> result = new HashMap<>();
+        result.put("deposit", TransactionResponseDto.builder()
+                .account_id(account.getId())
+                .balance(account.getBalance())
+                .amount(transactionRequestDto.getAmount())
+                .type(InOrOut.IN)
+                .build());
+
+        return result;
+    }
+
+    public Account findAccountById(Long accountId) {
+        Account account = accountRepository.findById(accountId).orElseThrow(()->new NoAccountException());
+        return account;
     }
 }

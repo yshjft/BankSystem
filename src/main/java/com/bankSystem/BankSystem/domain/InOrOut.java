@@ -1,5 +1,5 @@
 package com.bankSystem.BankSystem.domain;
 
-public enum InputOrOutput {
+public enum InOrOut {
     IN, OUT
 }

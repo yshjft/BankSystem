@@ -2,10 +2,7 @@ package com.bankSystem.BankSystem.web.exception.advice;
 
 import com.bankSystem.BankSystem.web.dto.error.ErrorResponse;
 import com.bankSystem.BankSystem.web.dto.error.ErrorsResponse;
-import com.bankSystem.BankSystem.web.exception.customException.EmailAlreadyInUseException;
-import com.bankSystem.BankSystem.web.exception.customException.LoginException;
-import com.bankSystem.BankSystem.web.exception.customException.NoUserException;
-import com.bankSystem.BankSystem.web.exception.customException.UnauthorizedAccessException;
+import com.bankSystem.BankSystem.web.exception.customException.*;
 import com.bankSystem.BankSystem.web.dto.error.ErrorCode;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.slf4j.Slf4j;
@@ -127,6 +124,18 @@ public class ApiControllerAdvice {
                 .message(ErrorCode.NO_USER.getMessage())
                 .code(ErrorCode.NO_USER.getCode())
                 .detail("non-existent user")
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NoAccountException.class)
+    public ResponseEntity<ErrorResponse> noAccountException(NoAccountException e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(ErrorCode.NO_ACCOUNT.getStatus())
+                .message(ErrorCode.NO_ACCOUNT.getMessage())
+                .code(ErrorCode.NO_ACCOUNT.getCode())
+                .detail("wrong account number")
                 .build();
 
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);

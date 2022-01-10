@@ -2,7 +2,7 @@ package com.bankSystem.BankSystem.domain.accountLog;
 
 import com.bankSystem.BankSystem.domain.baseEntity.DataJpaBaseEntity;
 import com.bankSystem.BankSystem.domain.account.Account;
-import com.bankSystem.BankSystem.domain.InputOrOutput;
+import com.bankSystem.BankSystem.domain.InOrOut;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +25,7 @@ public class AccountLog extends DataJpaBaseEntity {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    private InputOrOutput type;
+    private InOrOut type;
 
     @NotNull
     private int amount;
@@ -38,7 +38,7 @@ public class AccountLog extends DataJpaBaseEntity {
     private Account account;
 
     @Builder
-    public AccountLog(Long id, String info, InputOrOutput type, int amount, int balance) {
+    public AccountLog(Long id, String info, InOrOut type, int amount, int balance) {
         this.id = id;
         this.info = info;
         this.type = type;

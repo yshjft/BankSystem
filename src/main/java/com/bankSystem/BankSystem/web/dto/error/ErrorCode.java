@@ -12,7 +12,8 @@ public enum ErrorCode {
     LOGIN_FAIL_PASSWORD(HttpStatus.BAD_REQUEST.value(), "E004", HttpStatus.BAD_REQUEST.getReasonPhrase()),
     LOGIN_FAIL(HttpStatus.BAD_REQUEST.value(), "E005", HttpStatus.BAD_REQUEST.getReasonPhrase()),
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED.value(), "E006", HttpStatus.UNAUTHORIZED.getReasonPhrase()),
-    NO_USER(HttpStatus.NOT_FOUND.value(), "E007", HttpStatus.NOT_FOUND.getReasonPhrase());
+    NO_USER(HttpStatus.NOT_FOUND.value(), "E007", HttpStatus.NOT_FOUND.getReasonPhrase()),
+    NO_ACCOUNT(HttpStatus.NOT_FOUND.value(), "E008", HttpStatus.NOT_FOUND.getReasonPhrase());
 
     private final int status;
     private final String code;

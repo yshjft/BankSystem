@@ -5,13 +5,11 @@ import com.bankSystem.BankSystem.domain.account.AccountRepository;
 import com.bankSystem.BankSystem.domain.accountLog.AccountLog;
 import com.bankSystem.BankSystem.domain.accountLog.AccountLogRepository;
 import com.bankSystem.BankSystem.domain.user.User;
-import com.bankSystem.BankSystem.SessionKey;
-import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.testData.TestAccount;
 import com.bankSystem.BankSystem.testData.TestAccountLog;
 import com.bankSystem.BankSystem.testData.TestUser;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateRequestDto;
-import com.bankSystem.BankSystem.web.dto.account.deposit.DepositRequestDto;
+import com.bankSystem.BankSystem.web.dto.account.transaction.TransactionRequestDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,10 +46,9 @@ class AccountServiceTest {
             .id(TestAccount.ID)
             .balance(TestAccount.INIT_BALANCE)
             .build();
-    private DepositRequestDto depositRequestDto = DepositRequestDto.builder()
+    private TransactionRequestDto transactionRequestDto = TransactionRequestDto.builder()
             .account_id(TestAccount.ID)
             .amount(1000)
-            .type(TestAccountLog.TYPE_IN)
             .info(TestAccountLog.INFO)
             .build();
     private AccountLog accountLogForDeposit = AccountLog.builder()
@@ -117,17 +114,18 @@ class AccountServiceTest {
     }
 
     // 입금
+    @Test
     void 계좌_입금() {
-        // given(stub)
+        // given
         when(accountRepository.findById(TestAccount.ID)).thenReturn(Optional.of(account));
-        when(accountLogRepository.save(accountLogForDeposit)).thenReturn(accountLogForDeposit);
+        when(accountLogRepository.save(any())).thenReturn(accountLogForDeposit);
 
         // when
-        // accountService.deposit(depositRequestDto);
+         accountService.deposit(transactionRequestDto);
 
         // then
         verify(accountRepository).findById(TestAccount.ID);
-        verify(accountLogRepository).save(accountLogForDeposit);
+        verify(accountLogRepository).save(any());
     }
 
     // 출금
