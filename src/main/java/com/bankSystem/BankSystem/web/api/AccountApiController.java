@@ -112,6 +112,16 @@ public class AccountApiController {
                 .build();
     }
 
+    @DeleteMapping("/{accountId}")
+    @ResponseStatus(HttpStatus.OK)
+    public AccountResponse getAccounts(@PathVariable(value = "accountId") Long accountId) {
+        Map<String, Object> result = accountService.deleteAccount(accountId);
 
-    // 삭제
+        return AccountResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .result(result)
+                .build();
+    }
+
 }

@@ -33,7 +33,7 @@ public class Account extends DataJpaBaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", cascade = CascadeType.PERSIST)
     private List<AccountLog> accountLogs= new ArrayList<>();
 
     @Builder

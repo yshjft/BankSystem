@@ -12,6 +12,7 @@ import com.bankSystem.BankSystem.web.dto.account.checkAccount.CheckAccountReques
 import com.bankSystem.BankSystem.web.dto.account.checkAccount.CheckAccountResponseDto;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateRequestDto;
 import com.bankSystem.BankSystem.web.dto.account.create.AccountCreateResponseDto;
+import com.bankSystem.BankSystem.web.dto.account.delete.AccountDeleteResponseDto;
 import com.bankSystem.BankSystem.web.dto.account.getAccount.AccountDetailResponseDto;
 import com.bankSystem.BankSystem.web.dto.account.getAccount.AccountLogResponseDto;
 import com.bankSystem.BankSystem.web.dto.account.sendMoney.SendMoneyRequestDto;
@@ -32,6 +33,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,7 +49,6 @@ public class AccountService {
 
     public Map<String, Object> create(AccountCreateRequestDto accountCreateRequestDto) {
         User user = userService.getUser();
-
         Account account = accountRepository.save(accountCreateRequestDto.toEntity(user));
 
         Map<String, Object> result = new HashMap<>();
@@ -135,7 +136,6 @@ public class AccountService {
                 .balance(account.getBalance())
                 .build();
         accountLog.setAccount(account);
-        accountLogRepository.save(accountLog);
 
         Map<String, Object> result = new HashMap<>();
         result.put("deposit", TransactionResponseDto.builder()
@@ -161,7 +161,6 @@ public class AccountService {
                 .balance(account.getBalance())
                 .build();
         accountLog.setAccount(account);
-        accountLogRepository.save(accountLog);
 
         Map<String, Object> result = new HashMap<>();
         result.put("withdraw", TransactionResponseDto.builder()
@@ -209,9 +208,6 @@ public class AccountService {
                 .build();
         toAccountLog.setAccount(to);
 
-        accountLogRepository.save(fromAccountLog);
-        accountLogRepository.save(toAccountLog);
-
         Map<String, Object> result = new HashMap<>();
         result.put("send_money", SendMoneyResponseDto.builder()
                 .from(sendMoneyRequestDto.getFrom_id())
@@ -219,6 +215,23 @@ public class AccountService {
                 .amount(sendMoneyRequestDto.getAmount())
                 .balance(from.getBalance())
                 .memo(sendMoneyRequestDto.getMemo())
+                .build());
+
+        return result;
+    }
+
+    public Map<String, Object> deleteAccount(Long accountId) {
+        Account account = findAccountById(accountId);
+        checkAccountAccessRight(account);
+
+        accountLogRepository.bulkDeleteByAccount(account.getId());
+        accountRepository.deleteById(accountId);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("account", AccountDeleteResponseDto.builder()
+                .account_id(accountId)
+                .balance(account.getBalance())
+                .deletedAt(LocalDateTime.now())
                 .build());
 
         return result;
