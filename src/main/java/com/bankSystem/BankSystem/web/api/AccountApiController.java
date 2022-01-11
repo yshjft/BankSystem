@@ -64,7 +64,7 @@ public class AccountApiController {
                 .build();
     }
 
-    @PostMapping("/deposit")
+    @PutMapping("/deposit")
     @ResponseStatus(HttpStatus.OK)
     public AccountResponse deposit(@RequestBody @Validated TransactionRequestDto transactionRequestDto) {
         Map<String, Object> result = accountService.deposit(transactionRequestDto);
@@ -76,7 +76,7 @@ public class AccountApiController {
                 .build();
     }
 
-    @PostMapping("/withdraw")
+    @PutMapping("/withdraw")
     @ResponseStatus(HttpStatus.OK)
     public AccountResponse withdraw(@RequestBody @Validated TransactionRequestDto transactionRequestDto) {
         Map<String, Object> result = accountService.withdraw(transactionRequestDto);
@@ -100,7 +100,7 @@ public class AccountApiController {
                 .build();
     }
 
-    @PostMapping("/sendMoney")
+    @PutMapping("/sendMoney")
     @ResponseStatus(HttpStatus.OK)
     public AccountResponse sendMoney(@RequestBody @Validated SendMoneyRequestDto sendMoneyRequestDto) {
         Map<String, Object> result = accountService.sendMoney(sendMoneyRequestDto);
