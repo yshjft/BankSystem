@@ -165,6 +165,17 @@ public class ApiControllerAdvice {
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(AccountRemainException.class)
+    public ResponseEntity<ErrorResponse> accountRemain(AccountRemainException e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(ErrorCode.ACCOUNT_REMAIN.getStatus())
+                .message(ErrorCode.ACCOUNT_REMAIN.getMessage())
+                .code(ErrorCode.ACCOUNT_REMAIN.getCode())
+                .detail("remove all accounts")
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 
 
     // Exception e 핸들러 작성할 것 -> 서버 내부 문제

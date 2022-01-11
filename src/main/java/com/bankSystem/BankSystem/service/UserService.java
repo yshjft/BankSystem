@@ -1,21 +1,21 @@
 package com.bankSystem.BankSystem.service;
 
 import com.bankSystem.BankSystem.domain.user.UserRepository;
+import com.bankSystem.BankSystem.web.dto.user.delete.UserDeleteResponseDto;
 import com.bankSystem.BankSystem.web.dto.user.get.UserGetResponseDto;
 import com.bankSystem.BankSystem.web.dto.user.update.UserUpdateRequestDto;
 import com.bankSystem.BankSystem.web.dto.user.update.UserUpdateResponseDto;
 import com.bankSystem.BankSystem.domain.user.User;
 import com.bankSystem.BankSystem.web.dto.user.join.UserJoinRequestDto;
 import com.bankSystem.BankSystem.web.dto.user.join.UserJoinResponseDto;
+import com.bankSystem.BankSystem.web.exception.customException.AccountRemainException;
 import com.bankSystem.BankSystem.web.exception.customException.EmailAlreadyInUseException;
-import com.bankSystem.BankSystem.SessionKey;
+import com.bankSystem.BankSystem.SessionUtil;
 import com.bankSystem.BankSystem.web.exception.customException.NoUserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpSession;
 
@@ -72,13 +72,30 @@ public class UserService {
                 .build();
     }
 
+    public UserDeleteResponseDto deleteUser() {
+        User user = getUser();
+
+        if(user.getAccounts().size() != 0) {
+            throw new AccountRemainException();
+        }
+
+        userRepository.deleteById(user.getId());
+
+        HttpSession session = SessionUtil.getSession(false);
+        if(session != null) {
+            session.invalidate();
+        }
+
+        return UserDeleteResponseDto.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .build();
+    }
+
     protected User getUser() {
-        ServletRequestAttributes servletRequestAttribute = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpSession session = servletRequestAttribute.getRequest().getSession(false);
-
-        Long userId = (Long)session.getAttribute(SessionKey.LOGIN_MEMBER);
+        HttpSession session = SessionUtil.getSession(false);
+        Long userId = (Long)session.getAttribute(SessionUtil.LOGIN_MEMBER);
         User user = userRepository.findById(userId).orElseThrow(()->new NoUserException());
-
         return user;
     }
 }

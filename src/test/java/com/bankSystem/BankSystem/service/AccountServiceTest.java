@@ -1,6 +1,6 @@
 package com.bankSystem.BankSystem.service;
 
-import com.bankSystem.BankSystem.SessionKey;
+import com.bankSystem.BankSystem.SessionUtil;
 import com.bankSystem.BankSystem.domain.account.Account;
 import com.bankSystem.BankSystem.domain.account.AccountRepository;
 import com.bankSystem.BankSystem.domain.accountLog.AccountLog;
@@ -77,7 +77,7 @@ class AccountServiceTest {
     @Test
     void 계좌_생성() {
         account.setAccountOwner(user);
-        session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
+        session.setAttribute(SessionUtil.LOGIN_MEMBER, TestUser.ID);
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
         // given
@@ -100,7 +100,7 @@ class AccountServiceTest {
         accountList.add(account);
         Page<Account> accounts = new PageImpl<>(accountList);
 
-        session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
+        session.setAttribute(SessionUtil.LOGIN_MEMBER, TestUser.ID);
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
         // given
@@ -117,7 +117,7 @@ class AccountServiceTest {
 
     @Test
     void 계좌_입금() {
-        session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
+        session.setAttribute(SessionUtil.LOGIN_MEMBER, TestUser.ID);
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
         account.setAccountOwner(user);
 

@@ -1,6 +1,6 @@
 package com.bankSystem.BankSystem.service;
 
-import com.bankSystem.BankSystem.SessionKey;
+import com.bankSystem.BankSystem.SessionUtil;
 import com.bankSystem.BankSystem.domain.InOrOut;
 import com.bankSystem.BankSystem.domain.account.Account;
 import com.bankSystem.BankSystem.domain.account.AccountRepository;
@@ -252,7 +252,7 @@ public class AccountService {
         ServletRequestAttributes servletRequestAttribute = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = servletRequestAttribute.getRequest().getSession(false);
 
-        long userId = (Long)session.getAttribute(SessionKey.LOGIN_MEMBER);
+        long userId = (Long)session.getAttribute(SessionUtil.LOGIN_MEMBER);
         long ownerId = account.getOwnerId();
 
         if(userId != ownerId) throw new NotOwner();

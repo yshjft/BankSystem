@@ -3,8 +3,7 @@ package com.bankSystem.BankSystem.service;
 import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.web.dto.auth.AuthLoginRequestDto;
 import com.bankSystem.BankSystem.domain.user.User;
-import com.bankSystem.BankSystem.domain.user.UserJpaRepository;
-import com.bankSystem.BankSystem.SessionKey;
+import com.bankSystem.BankSystem.SessionUtil;
 import com.bankSystem.BankSystem.testData.TestUser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Optional;
 
@@ -38,8 +39,6 @@ class AuthServiceTest {
     private MockHttpServletRequest request =new MockHttpServletRequest();
     private MockHttpSession session = (MockHttpSession) request.getSession();
 
-
-
     @InjectMocks
     AuthService authService;
     @Mock
@@ -49,13 +48,15 @@ class AuthServiceTest {
 
     @Test
     void 로그인() {
+        session.setAttribute(SessionUtil.LOGIN_MEMBER, TestUser.ID);
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+
         //when
-        session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
         when(userRepository.findByEmail(TestUser.EMAIL)).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(TestUser.PASSWORD, TestUser.ENCODED_PASSWORD)).thenReturn(true);
 
         //given
-        authService.login(authLoginRequestDto, request);
+        authService.login(authLoginRequestDto);
 
         //then
         verify(userRepository).findByEmail(TestUser.EMAIL);
@@ -64,10 +65,12 @@ class AuthServiceTest {
 
     @Test
     void 로그아웃() {
+        session.setAttribute(SessionUtil.LOGIN_MEMBER, TestUser.ID);
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+
         // given
-        session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
 
         // when
-        authService.logout(request);
+        authService.logout();
     }
 }

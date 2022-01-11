@@ -21,8 +21,8 @@ public class AuthApiController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public AuthResponse login(@RequestBody @Validated AuthLoginRequestDto authLoginRequestDto, HttpServletRequest request) {
-        AuthResponseDto authResponseDto = authService.login(authLoginRequestDto, request);
+    public AuthResponse login(@RequestBody @Validated AuthLoginRequestDto authLoginRequestDto) {
+        AuthResponseDto authResponseDto = authService.login(authLoginRequestDto);
 
         return AuthResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -32,8 +32,8 @@ public class AuthApiController {
 
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
-    public AuthResponse logout(HttpServletRequest request) {
-        AuthResponseDto authResponseDto = authService.logout(request);
+    public AuthResponse logout() {
+        AuthResponseDto authResponseDto = authService.logout();
 
         return AuthResponse.builder()
                 .status(HttpStatus.OK.value())

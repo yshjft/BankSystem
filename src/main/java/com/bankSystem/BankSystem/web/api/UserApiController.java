@@ -1,6 +1,7 @@
 package com.bankSystem.BankSystem.web.api;
 
 import com.bankSystem.BankSystem.web.dto.user.UserResponse;
+import com.bankSystem.BankSystem.web.dto.user.delete.UserDeleteResponseDto;
 import com.bankSystem.BankSystem.web.dto.user.get.UserGetResponseDto;
 import com.bankSystem.BankSystem.web.dto.user.join.UserJoinRequestDto;
 import com.bankSystem.BankSystem.web.dto.user.join.UserJoinResponseDto;
@@ -58,5 +59,15 @@ public class UserApiController {
                 .build();
     }
 
-    // 탈퇴
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public UserResponse delete() {
+        UserDeleteResponseDto userDeleteResponseDto = userService.deleteUser();
+
+        return UserResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("user deleted")
+                .userResponseDto(userDeleteResponseDto)
+                .build();
+    }
 }

@@ -4,7 +4,7 @@ import com.bankSystem.BankSystem.domain.user.UserRepository;
 import com.bankSystem.BankSystem.web.dto.user.join.UserJoinRequestDto;
 import com.bankSystem.BankSystem.web.dto.user.update.UserUpdateRequestDto;
 import com.bankSystem.BankSystem.domain.user.User;
-import com.bankSystem.BankSystem.SessionKey;
+import com.bankSystem.BankSystem.SessionUtil;
 import com.bankSystem.BankSystem.testData.TestUser;
 import com.bankSystem.BankSystem.web.exception.customException.EmailAlreadyInUseException;
 import org.junit.jupiter.api.Test;
@@ -85,7 +85,7 @@ class UserServiceTest {
 
     @Test
     void 유저_조회() {
-        session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
+        session.setAttribute(SessionUtil.LOGIN_MEMBER, TestUser.ID);
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
         // given
@@ -100,7 +100,7 @@ class UserServiceTest {
 
     @Test
     void 정보_수정() {
-        session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
+        session.setAttribute(SessionUtil.LOGIN_MEMBER, TestUser.ID);
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
         // given
