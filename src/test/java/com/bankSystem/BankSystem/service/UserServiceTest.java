@@ -15,6 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Optional;
 
@@ -39,7 +41,7 @@ class UserServiceTest {
             .phoneNumber(TestUser.PHONE_NUMBER)
             .build();
     private UserUpdateRequestDto userUpdateRequestDto = UserUpdateRequestDto.builder().build();
-    private MockHttpServletRequest request =new MockHttpServletRequest();
+    private MockHttpServletRequest request = new MockHttpServletRequest();
     private MockHttpSession session = (MockHttpSession) request.getSession();
 
     @InjectMocks
@@ -83,12 +85,14 @@ class UserServiceTest {
 
     @Test
     void 유저_조회() {
-        // given
         session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+
+        // given
         when(userRepository.findById(TestUser.ID)).thenReturn(Optional.of(user));
 
         // when
-        userService.get(request);
+        userService.get();
 
         // then
         verify(userRepository).findById(TestUser.ID);
@@ -96,11 +100,14 @@ class UserServiceTest {
 
     @Test
     void 정보_수정() {
-        // 정보를 저장된 id로 조회
-        when(userRepository.findById(TestUser.ID)).thenReturn(Optional.of(user));
         session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
-        userService.update(userUpdateRequestDto, request);
+        // given
+        when(userRepository.findById(TestUser.ID)).thenReturn(Optional.of(user));
+
+        // when
+        userService.update(userUpdateRequestDto);
 
         // then
         verify(userRepository).findById(TestUser.ID);

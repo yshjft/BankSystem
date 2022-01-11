@@ -24,8 +24,8 @@ public class UserApiController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public UserResponse get(HttpServletRequest request) {
-        UserGetResponseDto userGetResponseDto = userService.get(request);
+    public UserResponse get() {
+        UserGetResponseDto userGetResponseDto = userService.get();
 
         return UserResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -48,8 +48,8 @@ public class UserApiController {
 
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public UserResponse update(@RequestBody @Validated UserUpdateRequestDto userUpdateRequestDto, HttpServletRequest request) {
-        UserUpdateResponseDto userUpdateResponseDto = userService.update(userUpdateRequestDto, request);
+    public UserResponse update(@RequestBody @Validated UserUpdateRequestDto userUpdateRequestDto) {
+        UserUpdateResponseDto userUpdateResponseDto = userService.update(userUpdateRequestDto);
 
         return UserResponse.builder()
                 .status(HttpStatus.OK.value())

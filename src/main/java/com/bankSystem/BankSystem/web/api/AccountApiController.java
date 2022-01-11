@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Slf4j
@@ -24,8 +23,8 @@ public class AccountApiController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountResponse create(@RequestBody @Validated AccountCreateRequestDto accountCreateRequestDto, HttpServletRequest request) {
-        Map<String, Object> result = accountService.create(accountCreateRequestDto, request);
+    public AccountResponse create(@RequestBody @Validated AccountCreateRequestDto accountCreateRequestDto) {
+        Map<String, Object> result = accountService.create(accountCreateRequestDto);
 
         return AccountResponse.builder()
                 .status(HttpStatus.CREATED.value())
@@ -34,15 +33,13 @@ public class AccountApiController {
                 .build();
     }
 
-    // 전체 조회
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public AccountResponse getAccounts(
             @RequestParam(value="page", defaultValue = "0") int page,
-            @RequestParam(value="perPage", defaultValue = "5") int perPage,
-            HttpServletRequest request
+            @RequestParam(value="perPage", defaultValue = "5") int perPage
     ) {
-        Map<String, Object> result = accountService.getAccounts(page, perPage, request);
+        Map<String, Object> result = accountService.getAccounts(page, perPage);
 
         return AccountResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -51,16 +48,14 @@ public class AccountApiController {
                 .build();
     }
 
-    // 상세 조회
     @GetMapping("/{accountId}")
     @ResponseStatus(HttpStatus.OK)
     public AccountResponse getAccounts(
             @PathVariable(value = "accountId") Long accountId,
             @RequestParam(value="page", defaultValue = "0") int page,
-            @RequestParam(value="perPage", defaultValue = "5") int perPage,
-            HttpServletRequest request
+            @RequestParam(value="perPage", defaultValue = "5") int perPage
     ) {
-        Map<String, Object> result = accountService.getAccount(page, perPage, accountId, request);
+        Map<String, Object> result = accountService.getAccount(page, perPage, accountId);
 
         return AccountResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -69,11 +64,10 @@ public class AccountApiController {
                 .build();
     }
 
-    // 입금
     @PostMapping("/deposit")
     @ResponseStatus(HttpStatus.OK)
-    public AccountResponse deposit(@RequestBody @Validated TransactionRequestDto transactionRequestDto, HttpServletRequest request) {
-        Map<String, Object> result = accountService.deposit(transactionRequestDto, request);
+    public AccountResponse deposit(@RequestBody @Validated TransactionRequestDto transactionRequestDto) {
+        Map<String, Object> result = accountService.deposit(transactionRequestDto);
 
         return AccountResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -82,11 +76,10 @@ public class AccountApiController {
                 .build();
     }
 
-    // 출금
     @PostMapping("/withdraw")
     @ResponseStatus(HttpStatus.OK)
-    public AccountResponse withdraw(@RequestBody @Validated TransactionRequestDto transactionRequestDto, HttpServletRequest request) {
-        Map<String, Object> result = accountService.withdraw(transactionRequestDto, request);
+    public AccountResponse withdraw(@RequestBody @Validated TransactionRequestDto transactionRequestDto) {
+        Map<String, Object> result = accountService.withdraw(transactionRequestDto);
 
         return AccountResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -95,11 +88,10 @@ public class AccountApiController {
                 .build();
     }
 
-    // 계좌 확인
     @GetMapping("/checkAccount")
     @ResponseStatus(HttpStatus.OK)
-    public AccountResponse checkAccount(@RequestBody @Validated CheckAccountRequestDto checkAccountRequestDto, HttpServletRequest request) {
-        Map<String, Object> result = accountService.checkAccount(checkAccountRequestDto, request);
+    public AccountResponse checkAccount(@RequestBody @Validated CheckAccountRequestDto checkAccountRequestDto) {
+        Map<String, Object> result = accountService.checkAccount(checkAccountRequestDto);
 
         return AccountResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -108,11 +100,10 @@ public class AccountApiController {
                 .build();
     }
 
-    // 송금
     @PostMapping("/sendMoney")
     @ResponseStatus(HttpStatus.OK)
-    public AccountResponse sendMoney(@RequestBody @Validated SendMoneyRequestDto sendMoneyRequestDto, HttpServletRequest request) {
-        Map<String, Object> result = accountService.sendMoney(sendMoneyRequestDto, request);
+    public AccountResponse sendMoney(@RequestBody @Validated SendMoneyRequestDto sendMoneyRequestDto) {
+        Map<String, Object> result = accountService.sendMoney(sendMoneyRequestDto);
 
         return AccountResponse.builder()
                 .status(HttpStatus.OK.value())

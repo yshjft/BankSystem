@@ -11,22 +11,21 @@ import com.bankSystem.BankSystem.web.exception.customException.EmailAlreadyInUse
 import com.bankSystem.BankSystem.SessionKey;
 import com.bankSystem.BankSystem.web.exception.customException.NoUserException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    
+
     public UserJoinResponseDto join(UserJoinRequestDto userJoinRequestDto) {
         if(userRepository.existsByEmail(userJoinRequestDto.getEmail())){
             throw new EmailAlreadyInUseException();
@@ -34,7 +33,6 @@ public class UserService {
 
         String encodedPassword = passwordEncoder.encode(userJoinRequestDto.getPassword());
         userJoinRequestDto.setEncodedPassword(encodedPassword);
-
         User newUser = userRepository.save(userJoinRequestDto.toEntity());
 
         return UserJoinResponseDto.builder()
@@ -47,8 +45,8 @@ public class UserService {
                 .build();
     }
 
-    public UserGetResponseDto get(HttpServletRequest request) {
-        User user = getUser(request);
+    public UserGetResponseDto get() {
+        User user = getUser();
 
         return UserGetResponseDto.builder()
                 .name(user.getName())
@@ -59,10 +57,10 @@ public class UserService {
                 .build();
     }
 
-    public UserUpdateResponseDto update(UserUpdateRequestDto userUpdateRequestDto, HttpServletRequest request) {
-        User user = getUser(request);
-        String encodedPassword = passwordEncoder.encode(userUpdateRequestDto.getPassword());
+    public UserUpdateResponseDto update(UserUpdateRequestDto userUpdateRequestDto) {
+        User user = getUser();
 
+        String encodedPassword = passwordEncoder.encode(userUpdateRequestDto.getPassword());
         user.updateUser(userUpdateRequestDto.getName(), userUpdateRequestDto.getBirthDate(), userUpdateRequestDto.getAddress(), userUpdateRequestDto.getPhoneNumber(), encodedPassword);
 
         return UserUpdateResponseDto.builder()
@@ -74,10 +72,11 @@ public class UserService {
                 .build();
     }
 
-    public User getUser(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        Long userId = (Long)session.getAttribute(SessionKey.LOGIN_MEMBER);
+    protected User getUser() {
+        ServletRequestAttributes servletRequestAttribute = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = servletRequestAttribute.getRequest().getSession(false);
 
+        Long userId = (Long)session.getAttribute(SessionKey.LOGIN_MEMBER);
         User user = userRepository.findById(userId).orElseThrow(()->new NoUserException());
 
         return user;

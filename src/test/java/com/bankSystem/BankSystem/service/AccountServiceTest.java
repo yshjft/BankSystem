@@ -1,5 +1,6 @@
 package com.bankSystem.BankSystem.service;
 
+import com.bankSystem.BankSystem.SessionKey;
 import com.bankSystem.BankSystem.domain.account.Account;
 import com.bankSystem.BankSystem.domain.account.AccountRepository;
 import com.bankSystem.BankSystem.domain.accountLog.AccountLog;
@@ -20,6 +21,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,15 +62,8 @@ class AccountServiceTest {
             .amount(1000)
             .balance(2000)
             .build();
-    private AccountLog accountLogForWithdraw = AccountLog.builder()
-            .id(TestAccountLog.ID_OUT)
-            .info(TestAccountLog.INFO)
-            .type(TestAccountLog.TYPE_OUT)
-            .amount(1000)
-            .balance(0)
-            .build();
-
-    private MockHttpServletRequest request =new MockHttpServletRequest();
+    private MockHttpServletRequest request = new MockHttpServletRequest();
+    private MockHttpSession session = (MockHttpSession) request.getSession();
 
     @InjectMocks
     AccountService accountService;
@@ -80,13 +77,15 @@ class AccountServiceTest {
     @Test
     void 계좌_생성() {
         account.setAccountOwner(user);
+        session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
         // given
-        when(userService.getUser(request)).thenReturn(user);
+        when(userService.getUser()).thenReturn(user);
         when(accountRepository.save(any())).thenReturn(account);
 
         // when
-        accountService.create(accountCreateRequestDto, request);
+        accountService.create(accountCreateRequestDto);
 
         // then
         verify(accountRepository).save(any());
@@ -94,43 +93,43 @@ class AccountServiceTest {
 
     @Test
     void 전체_계좌_조회() {
-        int page = 0;
-        int perPage = 5;
+        int page = 0, perPage = 5;
+
         Pageable pageable = PageRequest.of(page, perPage);
         List<Account> accountList = new ArrayList<>();
         accountList.add(account);
         Page<Account> accounts = new PageImpl<>(accountList);
 
+        session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+
         // given
-        when(userService.getUser(request)).thenReturn(user);
+        when(userService.getUser()).thenReturn(user);
         when(accountRepository.findByUser(user, pageable)).thenReturn(accounts);
 
         // when
-        accountService.getAccounts(page, perPage, request);
+        accountService.getAccounts(page, perPage);
 
         // then
-        verify(userService).getUser(request);
+        verify(userService).getUser();
         verify(accountRepository).findByUser(user, PageRequest.of(page, perPage));
     }
 
-    // 입금
     @Test
     void 계좌_입금() {
+        session.setAttribute(SessionKey.LOGIN_MEMBER, TestUser.ID);
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+        account.setAccountOwner(user);
+
         // given
         when(accountRepository.findById(TestAccount.ID)).thenReturn(Optional.of(account));
         when(accountLogRepository.save(any())).thenReturn(accountLogForDeposit);
 
         // when
-//         accountService.deposit(transactionRequestDto);
+         accountService.deposit(transactionRequestDto);
 
         // then
         verify(accountRepository).findById(TestAccount.ID);
         verify(accountLogRepository).save(any());
     }
-
-    // 출금
-
-    // 송금
-
-    // 상세 조회
 }

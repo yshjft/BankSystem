@@ -42,6 +42,14 @@ public class Account extends DataJpaBaseEntity {
         this.balance = balance;
     }
 
+    public Long getOwnerId() {
+        return this.user.getId();
+    }
+
+    public String getOwnerName() {
+        return this.user.getName();
+    }
+
     public void setAccountOwner(User user) {
         this.user = user;
         user.getAccounts().add(this);
