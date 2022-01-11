@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -90,7 +91,7 @@ public class AccountService {
         Account account = findAccountById(accountId);
         checkAccountAccessRight(account);
 
-        Page<AccountLog> accountLogs = accountLogRepository.findByAccount(account, PageRequest.of(page, perPage));
+        Page<AccountLog> accountLogs = accountLogRepository.findByAccount(account, PageRequest.of(page, perPage, Sort.by(Sort.Direction.DESC, "createdDate")));
 
         Map<String, Object> result = new HashMap<>();
         result.put("account", AccountDetailResponseDto.builder()
