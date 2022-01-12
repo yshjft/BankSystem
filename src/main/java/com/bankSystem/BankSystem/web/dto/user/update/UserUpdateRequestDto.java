@@ -26,7 +26,7 @@ public class UserUpdateRequestDto {
     @Length(max=200)
     private String address;
 
-    @Pattern(regexp = "^[0-9]*$")
+    @Pattern(regexp = "^[0-9]*$", message = "number only")
     @Length(max=30)
     private String phoneNumber;
 

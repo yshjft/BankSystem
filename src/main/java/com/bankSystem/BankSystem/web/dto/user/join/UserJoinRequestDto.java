@@ -9,6 +9,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.websocket.OnMessage;
 import java.time.LocalDate;
 
 
@@ -32,7 +33,7 @@ public class UserJoinRequestDto {
     @Email
     protected String email;
 
-    @Pattern(regexp = "^[0-9]*$")
+    @Pattern(regexp = "^[0-9]*$", message = "number only")
     @Length(max=30)
     protected String phoneNumber;
 

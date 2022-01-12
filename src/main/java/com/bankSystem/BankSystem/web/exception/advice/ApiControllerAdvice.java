@@ -4,10 +4,16 @@ import com.bankSystem.BankSystem.web.dto.error.ErrorResponse;
 import com.bankSystem.BankSystem.web.dto.error.ErrorsResponse;
 import com.bankSystem.BankSystem.web.exception.customException.*;
 import com.bankSystem.BankSystem.web.dto.error.ErrorCode;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -19,21 +25,35 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.DateTimeException;
+import java.time.format.DateTimeParseException;
 
 @Slf4j
 @RestControllerAdvice
 public class ApiControllerAdvice {
-    // type mismatch & wrong format
-    @ExceptionHandler(MismatchedInputException.class)
-    public ResponseEntity<ErrorResponse> typeMisMatchException(MismatchedInputException e) {
-        String field = e.getPath().get(0).getFieldName();
-        String message = e.getOriginalMessage();
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> dateTimeParseException(HttpMessageNotReadableException e) {
+        Throwable cause = e.getCause();
+        String detail = null;
+
+        if(cause instanceof JsonParseException) {
+            JsonParseException jpe = (JsonParseException) cause;
+            detail = jpe.getOriginalMessage();
+        }else if(cause instanceof MismatchedInputException) {
+            MismatchedInputException mie = (MismatchedInputException) cause;
+            String field = mie.getPath().get(0).getFieldName();
+            detail = field + " : " + mie.getOriginalMessage();
+        }else if(cause instanceof JsonMappingException) {
+            JsonMappingException jpe = (JsonMappingException) cause;
+            String field = jpe.getPath().get(0).getFieldName();
+            detail = field + " : " + jpe.getOriginalMessage();
+        }
 
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .status(ErrorCode.MISMATCHED_INPUT.getStatus())
-                .message(ErrorCode.MISMATCHED_INPUT.getMessage())
-                .code(ErrorCode.MISMATCHED_INPUT.getCode())
-                .detail(field+" : "+message)
+                .status(ErrorCode.WRONG_FORMAT.getStatus())
+                .message(ErrorCode.WRONG_FORMAT.getMessage())
+                .code(ErrorCode.WRONG_FORMAT.getCode())
+                .detail(detail)
                 .build();
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);

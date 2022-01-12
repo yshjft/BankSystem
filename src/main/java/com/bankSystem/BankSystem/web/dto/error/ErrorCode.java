@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
-    MISMATCHED_INPUT(HttpStatus.BAD_REQUEST.value(), "E000", HttpStatus.BAD_REQUEST.getReasonPhrase()),
+    WRONG_FORMAT(HttpStatus.BAD_REQUEST.value(), "E000", HttpStatus.BAD_REQUEST.getReasonPhrase()),
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST.value(), "E001", HttpStatus.BAD_REQUEST.getReasonPhrase()),
     EMAIL_ALREADY_IN_USE(HttpStatus.BAD_REQUEST.value(), "E002", HttpStatus.BAD_REQUEST.getReasonPhrase()),
     LOGIN_FAIL_EMAIL(HttpStatus.BAD_REQUEST.value(), "E003", HttpStatus.BAD_REQUEST.getReasonPhrase()),

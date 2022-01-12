@@ -15,6 +15,7 @@ spring:
   web:
     resources:
       add-mappings: false
+    locale: en
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
