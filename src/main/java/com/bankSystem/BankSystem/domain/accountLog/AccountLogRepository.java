@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 public interface AccountLogRepository extends JpaRepository<AccountLog, Long> {
     Page<AccountLog> findByAccount(Account account, Pageable pageable);
 
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("delete from AccountLog acl where acl.account.id = :accountId")
     void bulkDeleteByAccount(@Param("accountId") Long accountId);
 }

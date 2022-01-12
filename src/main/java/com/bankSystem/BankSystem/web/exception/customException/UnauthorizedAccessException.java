@@ -1,5 +1,7 @@
 package com.bankSystem.BankSystem.web.exception.customException;
 
+import lombok.extern.slf4j.Slf4j;
+
 public class UnauthorizedAccessException extends RuntimeException{
     public UnauthorizedAccessException() {
     }

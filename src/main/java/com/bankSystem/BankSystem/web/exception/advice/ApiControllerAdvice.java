@@ -14,6 +14,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -100,7 +102,7 @@ public class ApiControllerAdvice {
     }
 
     @ExceptionHandler(UnauthorizedAccessException.class)
-    public ResponseEntity<ErrorResponse> loginException(UnauthorizedAccessException e) {
+    public ResponseEntity<ErrorResponse> loginException(UnauthorizedAccessException e){
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .status(ErrorCode.UNAUTHORIZED_ACCESS.getStatus())
                 .message(ErrorCode.UNAUTHORIZED_ACCESS.getMessage())
@@ -177,6 +179,27 @@ public class ApiControllerAdvice {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ErrorResponse> noHandlerFoundException(NoHandlerFoundException e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(ErrorCode.NO_HANDLER_FOUND.getStatus())
+                .message(ErrorCode.NO_HANDLER_FOUND.getMessage())
+                .code(ErrorCode.NO_HANDLER_FOUND.getCode())
+                .detail("api does not exist")
+                .build();
 
-    // Exception e 핸들러 작성할 것 -> 서버 내부 문제
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> internalServerError(Exception e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(ErrorCode.INTERNAL_SERVER_ERROR.getStatus())
+                .message(ErrorCode.INTERNAL_SERVER_ERROR.getMessage())
+                .code(ErrorCode.INTERNAL_SERVER_ERROR.getCode())
+                .detail("internal server error")
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

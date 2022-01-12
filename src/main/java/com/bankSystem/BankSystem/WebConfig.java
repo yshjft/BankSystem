@@ -1,4 +1,4 @@
-package com.bankSystem.BankSystem.config;
+package com.bankSystem.BankSystem;
 
 import com.bankSystem.BankSystem.web.interceptor.AuthCheckInterceptor;
 import com.bankSystem.BankSystem.web.interceptor.LogInterceptor;

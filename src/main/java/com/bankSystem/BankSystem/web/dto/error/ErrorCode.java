@@ -15,7 +15,9 @@ public enum ErrorCode {
     NO_USER(HttpStatus.NOT_FOUND.value(), "E007", HttpStatus.NOT_FOUND.getReasonPhrase()),
     NO_ACCOUNT(HttpStatus.NOT_FOUND.value(), "E008", HttpStatus.NOT_FOUND.getReasonPhrase()),
     NOT_ENOUGH_MONEY(HttpStatus.BAD_REQUEST.value(), "E009", HttpStatus.BAD_REQUEST.getReasonPhrase()),
-    ACCOUNT_REMAIN(HttpStatus.BAD_REQUEST.value(), "E010", HttpStatus.BAD_REQUEST.getReasonPhrase());
+    ACCOUNT_REMAIN(HttpStatus.BAD_REQUEST.value(), "E010", HttpStatus.BAD_REQUEST.getReasonPhrase()),
+    NO_HANDLER_FOUND(HttpStatus.NOT_FOUND.value(), "E011", HttpStatus.NOT_FOUND.getReasonPhrase()),
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "E012", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
 
     private final int status;
     private final String code;
