@@ -1,4 +1,12 @@
 spring:
+  redis:
+    host: localhost
+    port: 6379
+    password:
+  session:
+    store-type: redis
+    redis:
+      flush-mode: on_save
   datasource:
     url: jdbc:h2:tcp://localhost/~/bankSystem
     username: sa
@@ -23,9 +31,9 @@ server:
   error:
     include-stacktrace: never
     include-binding-errors: never
-  servlet:
-    session:
-      timeout: 30m
+#  servlet:
+#    session:
+#      timeout: 30m
 env:
   session:
     key: LOGIN_MEMBER
