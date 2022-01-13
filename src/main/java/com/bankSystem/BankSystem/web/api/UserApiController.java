@@ -35,7 +35,7 @@ public class UserApiController {
                 .build();
     }
 
-    @PostMapping("/join")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse join(@RequestBody @Validated UserJoinRequestDto userJoinRequestDto) {
         UserJoinResponseDto userJoinResponseDto = userService.join(userJoinRequestDto);
@@ -47,7 +47,7 @@ public class UserApiController {
                 .build();
     }
 
-    @PutMapping("/update")
+    @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public UserResponse update(@RequestBody @Validated UserUpdateRequestDto userUpdateRequestDto) {
         UserUpdateResponseDto userUpdateResponseDto = userService.update(userUpdateRequestDto);
@@ -60,7 +60,7 @@ public class UserApiController {
     }
 
     @DeleteMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus
     public UserResponse delete() {
         UserDeleteResponseDto userDeleteResponseDto = userService.deleteUser();
 
