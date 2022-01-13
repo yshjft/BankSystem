@@ -20,6 +20,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -31,8 +32,10 @@ import java.time.format.DateTimeParseException;
 @Slf4j
 @RestControllerAdvice
 public class ApiControllerAdvice {
+    // json이 제대로 읽혀지지 않을 때 발생하는 예외
+    // ex. 잘못된 json 포맷, 잘못된 날짜 포맷
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponse> dateTimeParseException(HttpMessageNotReadableException e) {
+    public ResponseEntity<ErrorResponse> httpMessageNotReadableException(HttpMessageNotReadableException e) {
         Throwable cause = e.getCause();
         String detail = null;
 
@@ -59,8 +62,25 @@ public class ApiControllerAdvice {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    // 잘 못된 Method parameter에 대하 발생하는 오류이다. query parameter 또는 path variable에서 발생한다.
+    // ex. int에 String을 전달하는 경우
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        String detail = e.getName()+" : "+e.getValue()+" is not "+e.getRequiredType();
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(ErrorCode.INVALID_INPUT_VALUE.getStatus())
+                .message(ErrorCode.INVALID_INPUT_VALUE.getMessage())
+                .code(ErrorCode.INVALID_INPUT_VALUE.getCode())
+                .detail(detail)
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    // bean validation이 지켜지지 않은 필드가 있는 경우 예외 전달
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<ErrorsResponse> methodValidException(BindException e){
+    public ResponseEntity<ErrorsResponse> bindException(BindException e){
         BindingResult bindingResult = e.getBindingResult();
 
         ErrorsResponse errorsResponse = ErrorsResponse.builder()
