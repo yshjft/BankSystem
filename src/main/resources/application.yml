@@ -31,9 +31,3 @@ server:
   error:
     include-stacktrace: never
     include-binding-errors: never
-#  servlet:
-#    session:
-#      timeout: 30m
-env:
-  session:
-    key: LOGIN_MEMBER
