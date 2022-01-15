@@ -35,7 +35,7 @@ public class UserApiController {
                 .build();
     }
 
-    @PostMapping
+    @PostMapping("/join")
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse join(@RequestBody @Validated UserJoinRequestDto userJoinRequestDto) {
         UserJoinResponseDto userJoinResponseDto = userService.join(userJoinRequestDto);

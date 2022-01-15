@@ -1,7 +1,7 @@
 package com.bankSystem.BankSystem.service;
 
 import com.bankSystem.BankSystem.SessionUtil;
-import com.bankSystem.BankSystem.domain.InOrOut;
+import com.bankSystem.BankSystem.domain.accountLog.InOrOut;
 import com.bankSystem.BankSystem.domain.account.Account;
 import com.bankSystem.BankSystem.domain.account.AccountRepository;
 import com.bankSystem.BankSystem.domain.accountLog.AccountLog;

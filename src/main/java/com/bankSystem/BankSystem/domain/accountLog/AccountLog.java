@@ -2,7 +2,6 @@ package com.bankSystem.BankSystem.domain.accountLog;
 
 import com.bankSystem.BankSystem.domain.baseEntity.DataJpaBaseEntity;
 import com.bankSystem.BankSystem.domain.account.Account;
-import com.bankSystem.BankSystem.domain.InOrOut;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

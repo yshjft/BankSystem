@@ -66,7 +66,7 @@
     }
     ```
   
-  - ***[POST] /api/user***
+  - ***[POST] /api/user/join***
     - REQUEST
     ```
     {
@@ -143,7 +143,7 @@
 - ### ACCOUNT
   - ***[GET] /api/account?page=0&perPage=5***
 
-    |query parameter|default value|  
+    |QUERY PARAMETER|DEFAULT VALUE|  
     |:---:|:---:|   
     |page|0|
     |perPage|5|
@@ -188,7 +188,7 @@
 
   - ***[GET] /api/account/4?page=0&perPage=5***
 
-    |query parameter|default value|  
+    |QUERY PARAMETER|DEFAULT VALUE|  
     |:---:|:---:|   
     |page|0|
     |perPage|5|
@@ -367,7 +367,7 @@
         "result": {
             "send_money": {
                 "from": 4,
-                "to": 11,
+                "to": 11,F
                 "amount": 20000,
                 "balance": 400000,
                 "memo": "테스트 비용"
@@ -377,7 +377,7 @@
     ```
   - ***[DELETE] /api/account/{accountId}***
 
-    |path variable|explanation|  
+    |PATH VARIABLE|DESCRIPTION|  
     |:---:|:---:|   
     |accountId|삭제를 원하는 account id 입력|
 
@@ -395,5 +395,242 @@
         }
     }
     ```   
-- ### Errors
+- ### Error Response
+  - #### WRONG FORMAT
+
+    |ERROR CODE|DESCRIPTION|  
+    |:---:|:---:|   
+    |E000|json으로 변환 되지 않는 경우 발생(ex. wrong json format, wrong date format, wrong data type)|
+    
+    ```
+    (1)
+    {
+        "status": 400,
+        "message": "Bad Request",
+        "error": {
+            "code": "E000",
+            "detail": "wrong json format"
+        }
+    }
+    
+    (2) /api/user/join
+    {
+        "status": 400,
+        "message": "Bad Request",
+        "error": {
+            "code": "E000",
+            "detail": "birthDate : Cannot deserialize value of type `java.time.LocalDate` from String \"2002-7-6\": Failed to deserialize java.time.LocalDate: (java.time.format.DateTimeParseException) Text '2002-7-6' could not be parsed at index 5"
+        }
+    }
+    ```
+  
+  - #### INVALID INPUT VALUE
+
+    |ERROR CODE|DESCRIPTION|  
+    |:---:|:---:|   
+    |E001|잘못된 query parameter 또는 Path variable이 전달된 경우 발생 OR 설정한 Bean Validation이 지켜지지 않는 경우 발생|
+  
+    ```
+    (1) /api/account/4?perPage=5&page=a
+    {
+        "status": 400,
+        "message": "Bad Request",
+        "error": {
+            "code": "E001",
+            "detail": "page : a is not int"
+        }
+    }
+    
+    (2) /api/account/deposit
+    {
+        "status": 400,
+        "message": "Bad Request",
+        "code": "E001",
+        "errors": [
+            {
+                "field": "amount",
+                "value": 0,
+                "detail": "must be greater than or equal to 100"
+            },
+            {
+                "field": "account_id",
+                "value": null,
+                "detail": "must not be null"
+            }
+        ]
+    } 
+    ```
+  
+  - #### EMAIL ALREADY IN USE
+
+    |ERROR CODE|DESCRIPTION|  
+    |:---:|:---:|   
+    |E002|회원 가입시 사용한 email을 다른 사용자가 사용하고 있는 경우|
+  
+    ```
+    {
+        "status": 400,
+        "message": "Bad Request",
+        "error": {
+            "code": "E002",
+            "detail": "email already in use"
+        }
+    }
+    ```
+    
+  - #### LOGIN FAIL
+  
+    |ERROR CODE|DESCRIPTION|  
+    |:---:|:---:|   
+    |E003|LOGIN FAIL EMAIL, 잘 못된 이메일|
+    |E004|LOGIN FAIL PASSWORD, 잘 못된 패스워드|
+    |E005|LOGIN FAIL, 로그인 오류|
+  
+    ```
+    (1) LOGIN FAIL EMAIL
+    {
+        "status": 400,
+        "message": "Bad Request",
+        "error": {
+            "code": "E003",
+            "detail": "wrong email"
+        }
+    }
+    
+    (2) LOGIN FAIL PASSWORD
+    {
+        "status": 400,
+        "message": "Bad Request",
+        "error": {
+            "code": "E004",
+            "detail": "wrong password"
+        }
+    }
+    
+    (3) LOGIN FAIL
+    {
+        "status": 400,
+        "message": "Bad Request",
+        "error": {
+            "code": "E005",
+            "detail": "something's wrong! check your email or password!"
+        }
+    }
+    ```
+    
+  - #### UNAUTHORIZED ACCESS
+  
+    |ERROR CODE|DESCRIPTION|  
+    |:---:|:---:|   
+    |E006|로그인을 하지 않은 상태에서 로그인이 필요한 기능 사용시 OR 타인의 계좌에 접근할 경우|
+  
+    ```
+    (1)
+    {
+        "status": 401,
+        "message": "Unauthorized",
+        "error": {
+            "code": "E006",
+            "detail": "unauthorized access"
+        }
+    }
+    
+    (2)
+    {
+        "status": 401,
+        "message": "Unauthorized",
+        "error": {
+            "code": "E006",
+            "detail": "not your account"
+        }
+    }
+    ```
+
+  - #### NO USER
+    |ERROR CODE|DESCRIPTION|  
+    |:---:|:---:|   
+    |E007|사용자 조회시 존재하지 않을 경우|
+  
+    ```
+    {
+        "status": 404,
+        "message": "Not Found",
+        "error": {
+            "code": "E007",
+            "detail": "non-existent user"
+        }
+    }
+    ```
+
+  - #### NO ACCOUNT
+    |ERROR CODE|DESCRIPTION|  
+    |:---:|:---:|   
+    |E008|입금, 인출, 송금시 잘 못된 계좌번호를 이용할 경우|
+
+    ```
+    {
+        "status": 404,
+        "message": "Not Found",
+        "error": {
+            "code": "E008",
+            "detail": "wrong account number"
+        }
+    }
+    ``` 
+    
+  - #### NOT ENOUGH MONEY
+    |ERROR CODE|DESCRIPTION|  
+    |:---:|:---:|   
+    |E009|송금, 인출시 잔액이 부족할 경우|
+  
+    ```
+    {
+        "status": 400,
+        "message": "Bad Request",
+        "error": {
+            "code": "E009",
+            "detail": "lack of balance"
+        }
+    }
+    ```
+    
+  - #### ACCOUNT REMAIN
+    |ERROR CODE|DESCRIPTION|  
+    |:---:|:---:|   
+    |E010|회원 탈퇴시 계좌가 남아 있는 경우|
+  
+    ```
+    {
+        "status": 400,
+        "message": "Bad Request",
+        "error": {
+            "code": "E010",
+            "detail": "remove all accounts"
+        }
+    }
+    ```
+  
+  - #### NO HANDLER FOUND EXCEPTION
+    |ERROR CODE|DESCRIPTION|  
+    |:---:|:---:|   
+    |E011|존재 하지 않는 api를 사용할 경우|
+
+    ```
+    {
+        "status": 404,
+        "message": "Not Found",
+        "error": {
+            "code": "E011",
+            "detail": "api does not exist"
+        }
+    }
+    ```
+  - ### INTERNAL SERVER ERROR
+    |ERROR CODE|DESCRIPTION|  
+    |:---:|:---:|   
+    |E012|서버 내우 에러|
+  
+    ```
+    
+    ```
   

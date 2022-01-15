@@ -15,25 +15,19 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update #create
-    properties:
-      hibernate:
-        format_sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
   mvc:
     throw-exception-if-no-handler-found: true
   web:
     resources:
       add-mappings: false
     locale: en
-logging.level:
-  org.hibernate.SQL: debug
-  org.hibernate.type: trace
+#logging.level:
+#  org.hibernate.SQL: debug
+#  org.hibernate.type: trace
 server:
   error:
     include-stacktrace: never
     include-binding-errors: never
-#  servlet:
-#    session:
-#      timeout: 30m
-env:
-  session:
-    key: LOGIN_MEMBER

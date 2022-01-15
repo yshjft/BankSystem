@@ -1,6 +1,6 @@
 package com.bankSystem.BankSystem.web.dto.account.getAccount;
 
-import com.bankSystem.BankSystem.domain.InOrOut;
+import com.bankSystem.BankSystem.domain.accountLog.InOrOut;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

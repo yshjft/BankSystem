@@ -44,12 +44,20 @@ public class ApiControllerAdvice {
             detail = jpe.getOriginalMessage();
         }else if(cause instanceof MismatchedInputException) {
             MismatchedInputException mie = (MismatchedInputException) cause;
-            String field = mie.getPath().get(0).getFieldName();
-            detail = field + " : " + mie.getOriginalMessage();
+            if(mie.getPath() != null && mie.getPath().size() > 0) {
+                String field = mie.getPath().get(0).getFieldName();
+                detail = field + " : " + mie.getOriginalMessage();
+            }else{
+                detail = "wrong json format";
+            }
         }else if(cause instanceof JsonMappingException) {
             JsonMappingException jpe = (JsonMappingException) cause;
-            String field = jpe.getPath().get(0).getFieldName();
-            detail = field + " : " + jpe.getOriginalMessage();
+            if(jpe.getPath() != null && jpe.getPath().size() > 0) {
+                String field = jpe.getPath().get(0).getFieldName();
+                detail = field + " : " + jpe.getOriginalMessage();
+            }else{
+                detail = "wrong json format";
+            }
         }
 
         ErrorResponse errorResponse = ErrorResponse.builder()

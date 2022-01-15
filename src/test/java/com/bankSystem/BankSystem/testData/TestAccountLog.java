@@ -1,6 +1,6 @@
 package com.bankSystem.BankSystem.testData;
 
-import com.bankSystem.BankSystem.domain.InOrOut;
+import com.bankSystem.BankSystem.domain.accountLog.InOrOut;
 
 public class TestAccountLog {
     public static final Long ID_IN = 3L;
