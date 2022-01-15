@@ -628,9 +628,16 @@
   - ### INTERNAL SERVER ERROR
     |ERROR CODE|DESCRIPTION|  
     |:---:|:---:|   
-    |E012|서버 내우 에러|
+    |E012|서버 내부 에러|
   
     ```
-    
+    {
+        "status": 500,
+        "message": "Internal Server Error",
+        "error": {
+            "code": "E012",
+            "detail": "internal server error"
+        }
+    }
     ```
   
