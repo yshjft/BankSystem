@@ -31,3 +31,4 @@ server:
   error:
     include-stacktrace: never
     include-binding-errors: never
+
