@@ -6,11 +6,12 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY src src
 
-RUN chmod +x ./gradlew
+RUN chmode +x ./gradlew
 RUN ./gradlew bootJar
 
 FROM openjdk:14-alpine
 COPY --from=builder build/libs/*.jar app.jar
+
 
 EXPOSE 8080
 
