@@ -1,14 +1,14 @@
 spring:
   redis:
-    host: localhost
+    host: redis_dev
     port: 6379
     password:
-    session:
-      store-type: redis
-      redis:
-        flush-mode: on_save
+  session:
+    store-type: redis
+    redis:
+      flush-mode: on_save
   datasource:
-    url: jdbc:h2:tcp://localhost/~/bankSystem
+    url: jdbc:h2:tcp://10.10.100.231/~/bankSystem
     username: sa
     password:
     driver-class-name: org.h2.Driver
