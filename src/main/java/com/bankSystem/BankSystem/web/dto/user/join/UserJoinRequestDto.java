@@ -37,8 +37,9 @@ public class UserJoinRequestDto {
     @Length(max=30)
     protected String phoneNumber;
 
-    @NotBlank
+    @NotNull
     @Length(min=4, max=20)
+    @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "only character and number")
     private String password;
 
     private String encodedPassword;

@@ -14,7 +14,7 @@ spring:
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true # 모든 DDL, DML 확인여부

@@ -13,6 +13,7 @@ import com.bankSystem.BankSystem.web.exception.customException.EmailAlreadyInUse
 import com.bankSystem.BankSystem.SessionUtil;
 import com.bankSystem.BankSystem.web.exception.customException.NoUserException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,8 +60,9 @@ public class UserService {
 
     public UserUpdateResponseDto update(UserUpdateRequestDto userUpdateRequestDto) {
         User user = getUser();
-        // String encodedPassword = passwordEncoder.encode(userUpdateRequestDto.getPassword());
-        // user.updateUser(userUpdateRequestDto.getName(), userUpdateRequestDto.getBirthDate(), userUpdateRequestDto.getAddress(), userUpdateRequestDto.getPhoneNumber(), encodedPassword);
+
+        String encodedPassword = userUpdateRequestDto.getPassword() != null ? passwordEncoder.encode(userUpdateRequestDto.getPassword()) : null;
+        user.updateUser(userUpdateRequestDto.getName(), userUpdateRequestDto.getBirthDate(), userUpdateRequestDto.getAddress(), userUpdateRequestDto.getPhoneNumber(), encodedPassword);
 
         return UserUpdateResponseDto.builder()
                 .id(user.getId())

@@ -62,6 +62,8 @@ public class User extends BaseEntity {
         this.birthDate = birthDate;
         this.address = address;
         this.phoneNumber = phoneNumber;
-        this.password = password;
+        if(password != null) {
+            this.password = password;
+        }
     }
 }

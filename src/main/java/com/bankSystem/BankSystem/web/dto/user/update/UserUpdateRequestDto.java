@@ -26,12 +26,13 @@ public class UserUpdateRequestDto {
     @Length(max=200)
     private String address;
 
-    @Pattern(regexp = "^[0-9]*$", message = "number only")
+    @NotBlank
     @Length(max=30)
+    @Pattern(regexp = "^[0-9]*$", message = "number only")
     private String phoneNumber;
 
-    @NotBlank
     @Length(min=4, max=20)
+    @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "only character and number")
     private String password;
 
     @Builder
