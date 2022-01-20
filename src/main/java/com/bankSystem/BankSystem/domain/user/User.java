@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class User extends BaseEntity {
-    @Id @GeneratedValue(strategy=GenerationType.AUTO)
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="user_id")
     private Long id;
 

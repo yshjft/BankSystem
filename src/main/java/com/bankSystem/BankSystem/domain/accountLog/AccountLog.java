@@ -15,7 +15,7 @@ import static javax.persistence.FetchType.*;
 @Getter
 @NoArgsConstructor
 public class AccountLog extends DataJpaBaseEntity {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "account_log_id")
     private Long id;
 

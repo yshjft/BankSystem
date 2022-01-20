@@ -59,9 +59,8 @@ public class UserService {
 
     public UserUpdateResponseDto update(UserUpdateRequestDto userUpdateRequestDto) {
         User user = getUser();
-
-        String encodedPassword = passwordEncoder.encode(userUpdateRequestDto.getPassword());
-        user.updateUser(userUpdateRequestDto.getName(), userUpdateRequestDto.getBirthDate(), userUpdateRequestDto.getAddress(), userUpdateRequestDto.getPhoneNumber(), encodedPassword);
+        // String encodedPassword = passwordEncoder.encode(userUpdateRequestDto.getPassword());
+        // user.updateUser(userUpdateRequestDto.getName(), userUpdateRequestDto.getBirthDate(), userUpdateRequestDto.getAddress(), userUpdateRequestDto.getPhoneNumber(), encodedPassword);
 
         return UserUpdateResponseDto.builder()
                 .id(user.getId())
