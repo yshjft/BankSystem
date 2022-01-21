@@ -6,7 +6,9 @@ services:
     ports:
       - "6379:6379"
   bank_system:
-    image: dockerhys/bank-system:1.0
+    build:
+      dockerfile: Dockerfile
+      context: .
     ports:
       - "80:8080"
     depends_on:
