@@ -43,7 +43,6 @@ public class WebConfig  extends WebSecurityConfigurerAdapter implements WebMvcCo
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().disable()
                 .csrf().disable()
-                .csrf().disable()
                 .formLogin().disable()
                 .headers().frameOptions().disable();
     }
