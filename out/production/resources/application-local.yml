@@ -8,7 +8,7 @@ spring:
     redis:
       flush-mode: on_save
   datasource:
-    url: jdbc:h2:tcp://localhost/~/bankSystem
+    url: jdbc:h2:tcp://localhost/~/h2-data/bankSystem
     username: sa
     password:
     driver-class-name: org.h2.Driver

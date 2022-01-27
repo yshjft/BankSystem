@@ -22,7 +22,6 @@ public class LogInterceptor implements HandlerInterceptor {
 
         String uri = request.getRequestURI();
         String method = request.getMethod();
-        HttpSession session = request.getSession(false);
 
         log.info("[ID: {}] REQUEST {} {}", uuid, method, uri);
         return true;
